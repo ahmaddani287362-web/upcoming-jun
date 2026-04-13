@@ -2,10 +2,10 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <meta name="description" content="JUNTracker - Ultimate release tracker for Movies, Series, Anime, Games, Manga, Manhwa, Manhua, K-Drama, C-Drama & Books">
     <meta name="theme-color" content="#0A0C10">
-    <title>JUNTracker | 10+ Release Categories (Fixed)</title>
+    <title>JUNTracker Pro | Complete Release Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -233,13 +233,25 @@
             border-left: 2px solid var(--accent-cyan);
         }
 
+        /* FIXED: Gambar full tanpa potongan */
+        .card-image-wrapper {
+            width: 100%;
+            height: 260px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0A0C10, #12161F);
+            overflow: hidden;
+        }
         .card-image {
-            height: 200px;
-            background-size: cover;
-            background-position: center;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
             transition: transform 0.5s;
         }
-        .release-card:hover .card-image { transform: scale(1.02); }
+        .release-card:hover .card-image {
+            transform: scale(1.05);
+        }
 
         .card-content { padding: 16px; }
         .card-title {
@@ -250,6 +262,7 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            line-height: 1.3;
         }
         .release-date {
             display: inline-flex;
@@ -322,6 +335,7 @@
             .tab-btn { padding: 6px 12px; font-size: 11px; }
             .stats-bar { flex-direction: column; }
             .navbar { flex-direction: column; text-align: center; }
+            .card-image-wrapper { height: 220px; }
         }
     </style>
 </head>
@@ -332,9 +346,9 @@
 
 <div class="container">
     <nav class="navbar">
-        <div class="logo">JUN<span>Tracker</span></div>
+        <div class="logo">JUN<span>Tracker Pro</span></div>
         <div class="nav-stats">
-            <div class="stat-pill"><i class="fas fa-database"></i> 10 APIs</div>
+            <div class="stat-pill"><i class="fas fa-database"></i> 10+ APIs</div>
             <div class="stat-pill"><i class="fas fa-sync-alt"></i> Live</div>
         </div>
     </nav>
@@ -342,7 +356,7 @@
     <div class="search-section">
         <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="Search... (Ctrl+K)">
+            <input type="text" id="searchInput" placeholder="Search all categories... (Ctrl+K)">
         </div>
     </div>
 
@@ -367,12 +381,12 @@
     </div>
 
     <div id="contentArea">
-        <div class="loading-state"><div class="neon-spinner"></div><p>Fetching data from 10 APIs...</p></div>
+        <div class="loading-state"><div class="neon-spinner"></div><p>Fetching data from 10+ APIs...</p></div>
     </div>
 
     <footer class="footer">
-        <p>JUNTracker — TMDB · AniList · RAWG · OpenLibrary</p>
-        <p style="margin-top: 8px;">🎌 Manga/Manhwa/Manhua from AniList | 🎬 K-Drama/C-Drama from reliable sources</p>
+        <p>JUNTracker Pro — TMDB · AniList · RAWG · MangaDex · OpenLibrary</p>
+        <p style="margin-top: 8px;">🎌 All images in original aspect ratio | 🎬 K-Drama/C-Drama from TMDB</p>
     </footer>
 </div>
 
@@ -407,7 +421,7 @@
             if (diff < 0) return null;
             if (diff === 0) return "Today!";
             if (diff === 1) return "Tomorrow!";
-            return `${diff}d`;
+            return `${diff}d left`;
         } catch(e) { return null; }
     }
 
@@ -416,15 +430,15 @@
         return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m] || m));
     }
 
-    // ========== FETCH FUNCTIONS ==========
+    // ========== MOVIES & SERIES (TMDB) ==========
     async function fetchMovies() {
         const url = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEYS.tmdb}&language=en-US&page=1`;
         const res = await fetch(url);
         const data = await res.json();
-        return data.results.slice(0, 15).map(m => ({
+        return data.results.slice(0, 20).map(m => ({
             id: m.id, title: m.title, releaseDate: m.release_date,
-            description: m.overview?.substring(0, 150) || "No description",
-            image: m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : null,
+            description: m.overview?.substring(0, 150) || "No description available",
+            image: m.poster_path ? `https://image.tmdb.org/t/p/original${m.poster_path}` : null,
             type: "Movie", rating: m.vote_average?.toFixed(1) || "N/A", source: "TMDB"
         }));
     }
@@ -433,21 +447,23 @@
         const url = `https://api.themoviedb.org/3/tv/on_the_air?api_key=${API_KEYS.tmdb}&language=en-US&page=1`;
         const res = await fetch(url);
         const data = await res.json();
-        return data.results.slice(0, 15).map(s => ({
+        return data.results.slice(0, 20).map(s => ({
             id: s.id, title: s.name, releaseDate: s.first_air_date || "TBA",
-            description: s.overview?.substring(0, 150) || "No description",
-            image: s.poster_path ? `https://image.tmdb.org/t/p/w500${s.poster_path}` : null,
+            description: s.overview?.substring(0, 150) || "No description available",
+            image: s.poster_path ? `https://image.tmdb.org/t/p/original${s.poster_path}` : null,
             type: "Series", rating: s.vote_average?.toFixed(1) || "N/A", source: "TMDB"
         }));
     }
 
+    // ========== ANIME (AniList) ==========
     async function fetchAnime() {
-        const query = `{"query":"query { Page(page:1 perPage:15) { media(type:ANIME sort:POPULARITY_DESC status:NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { large } averageScore format } } }"}`;
         try {
             const res = await fetch('https://graphql.anilist.co', { 
                 method: 'POST', 
                 headers: { 'Content-Type': 'application/json' }, 
-                body: '{"query":"query { Page(page:1 perPage:15) { media(type:ANIME sort:POPULARITY_DESC status:NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { large } averageScore format } } }"}'
+                body: JSON.stringify({
+                    query: `query { Page(page: 1 perPage: 20) { media(type: ANIME sort: POPULARITY_DESC status: NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { extraLarge } averageScore format } } }`
+                })
             });
             const data = await res.json();
             if (data.errors) throw new Error(data.errors[0].message);
@@ -456,33 +472,35 @@
                 if(a.startDate.year) date = `${a.startDate.year}-${String(a.startDate.month||1).padStart(2,'0')}-${String(a.startDate.day||1).padStart(2,'0')}`;
                 return {
                     id: a.id, title: a.title.romaji, releaseDate: date,
-                    description: a.description?.replace(/<[^>]*>/g,'').substring(0,150) || "Upcoming anime",
-                    image: a.coverImage?.large, type: `Anime • ${a.format||"TV"}`,
+                    description: a.description?.replace(/<[^>]*>/g,'').substring(0,150) || "Upcoming anime release",
+                    image: a.coverImage?.extraLarge, type: `Anime • ${a.format||"TV"}`,
                     rating: a.averageScore ? (a.averageScore/10).toFixed(1) : "N/A", source: "AniList"
                 };
             });
         } catch(e) { console.error("Anime error:", e); return []; }
     }
 
+    // ========== GAMES (RAWG) ==========
     async function fetchGames() {
-        const url = `https://api.rawg.io/api/games?key=${API_KEYS.rawg}&dates=2025-01-01,2027-12-31&ordering=released&page_size=15`;
+        const url = `https://api.rawg.io/api/games?key=${API_KEYS.rawg}&dates=2025-01-01,2028-12-31&ordering=released&page_size=20`;
         const res = await fetch(url);
         const data = await res.json();
         return data.results.map(g => ({
             id: g.id, title: g.name, releaseDate: g.released || "TBA",
-            description: g.description_raw?.substring(0,150) || "Upcoming game",
+            description: g.description_raw?.substring(0,150) || "Upcoming game release",
             image: g.background_image, type: "Game", rating: g.rating?.toFixed(1) || "N/A", source: "RAWG"
         }));
     }
 
-    // FIXED: Correct AniList GraphQL queries for Manga/Manhwa/Manhua
+    // ========== MANGA/MANHWA/MANHUA via AniList ==========
     async function fetchManga() {
-        const query = `{"query":"query { Page(page:1 perPage:15) { media(type:MANGA format:MANGA sort:POPULARITY_DESC status:NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { large } averageScore } } }"}`;
         try {
             const res = await fetch('https://graphql.anilist.co', { 
                 method: 'POST', 
                 headers: { 'Content-Type': 'application/json' }, 
-                body: query
+                body: JSON.stringify({
+                    query: `query { Page(page: 1 perPage: 20) { media(type: MANGA format: MANGA sort: POPULARITY_DESC status: NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { extraLarge } averageScore } } }`
+                })
             });
             const data = await res.json();
             if (data.errors) throw new Error(data.errors[0].message);
@@ -491,8 +509,8 @@
                 if(m.startDate.year) date = `${m.startDate.year}-${String(m.startDate.month||1).padStart(2,'0')}-${String(m.startDate.day||1).padStart(2,'0')}`;
                 return {
                     id: m.id, title: m.title.romaji, releaseDate: date,
-                    description: m.description?.replace(/<[^>]*>/g,'').substring(0,150) || "Upcoming manga",
-                    image: m.coverImage?.large, type: "Manga",
+                    description: m.description?.replace(/<[^>]*>/g,'').substring(0,150) || "Upcoming manga release",
+                    image: m.coverImage?.extraLarge, type: "Manga",
                     rating: m.averageScore ? (m.averageScore/10).toFixed(1) : "N/A", source: "AniList"
                 };
             });
@@ -500,12 +518,13 @@
     }
 
     async function fetchManhwa() {
-        const query = `{"query":"query { Page(page:1 perPage:15) { media(type:MANGA format:MANHWA sort:POPULARITY_DESC status:NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { large } averageScore } } }"}`;
         try {
             const res = await fetch('https://graphql.anilist.co', { 
                 method: 'POST', 
                 headers: { 'Content-Type': 'application/json' }, 
-                body: query
+                body: JSON.stringify({
+                    query: `query { Page(page: 1 perPage: 20) { media(type: MANGA format: MANHWA sort: POPULARITY_DESC status: NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { extraLarge } averageScore } } }`
+                })
             });
             const data = await res.json();
             if (data.errors) throw new Error(data.errors[0].message);
@@ -514,8 +533,8 @@
                 if(m.startDate.year) date = `${m.startDate.year}-${String(m.startDate.month||1).padStart(2,'0')}-${String(m.startDate.day||1).padStart(2,'0')}`;
                 return {
                     id: m.id, title: m.title.romaji, releaseDate: date,
-                    description: m.description?.replace(/<[^>]*>/g,'').substring(0,150) || "Upcoming manhwa",
-                    image: m.coverImage?.large, type: "Manhwa",
+                    description: m.description?.replace(/<[^>]*>/g,'').substring(0,150) || "Upcoming manhwa release",
+                    image: m.coverImage?.extraLarge, type: "Manhwa",
                     rating: m.averageScore ? (m.averageScore/10).toFixed(1) : "N/A", source: "AniList"
                 };
             });
@@ -523,12 +542,13 @@
     }
 
     async function fetchManhua() {
-        const query = `{"query":"query { Page(page:1 perPage:15) { media(type:MANGA format:MANHUA sort:POPULARITY_DESC status:NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { large } averageScore } } }"}`;
         try {
             const res = await fetch('https://graphql.anilist.co', { 
                 method: 'POST', 
                 headers: { 'Content-Type': 'application/json' }, 
-                body: query
+                body: JSON.stringify({
+                    query: `query { Page(page: 1 perPage: 20) { media(type: MANGA format: MANHUA sort: POPULARITY_DESC status: NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { extraLarge } averageScore } } }`
+                })
             });
             const data = await res.json();
             if (data.errors) throw new Error(data.errors[0].message);
@@ -537,50 +557,57 @@
                 if(m.startDate.year) date = `${m.startDate.year}-${String(m.startDate.month||1).padStart(2,'0')}-${String(m.startDate.day||1).padStart(2,'0')}`;
                 return {
                     id: m.id, title: m.title.romaji, releaseDate: date,
-                    description: m.description?.replace(/<[^>]*>/g,'').substring(0,150) || "Upcoming manhua",
-                    image: m.coverImage?.large, type: "Manhua",
+                    description: m.description?.replace(/<[^>]*>/g,'').substring(0,150) || "Upcoming manhua release",
+                    image: m.coverImage?.extraLarge, type: "Manhua",
                     rating: m.averageScore ? (m.averageScore/10).toFixed(1) : "N/A", source: "AniList"
                 };
             });
         } catch(e) { console.error("Manhua error:", e); return []; }
     }
 
-    // K-Drama & C-Drama with fallback data (avoiding CORS)
+    // ========== K-DRAMA & C-DRAMA via TMDB (Upcoming) ==========
     async function fetchKDrama() {
-        // Fallback data karena CORS issues
-        return [
-            { id: 1, title: "When the Phone Rings", releaseDate: "2026-05-15", description: "Mystery romance thriller about a couple in a contract marriage", image: null, type: "K-Drama", rating: "8.7", source: "MyDramaList" },
-            { id: 2, title: "Pandora: Beneath the Paradise", releaseDate: "2026-06-01", description: "A woman's revenge and a mysterious death", image: null, type: "K-Drama", rating: "7.9", source: "MyDramaList" },
-            { id: 3, title: "Queen of Tears Season 2", releaseDate: "2026-07-10", description: "Continuation of the hit romance drama", image: null, type: "K-Drama", rating: "9.1", source: "MyDramaList" },
-            { id: 4, title: "Uncle Samsik", releaseDate: "2026-05-22", description: "1960s Korea political drama with Song Kang-ho", image: null, type: "K-Drama", rating: "8.5", source: "MyDramaList" },
-            { id: 5, title: "The Whirlwind", releaseDate: "2026-06-28", description: "Political thriller about a prime minister", image: null, type: "K-Drama", rating: "8.3", source: "MyDramaList" }
-        ];
+        const url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEYS.tmdb}&with_original_language=ko&sort_by=first_air_date.desc&page=1`;
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            return data.results.slice(0, 20).map(d => ({
+                id: d.id, title: d.name, releaseDate: d.first_air_date || "TBA",
+                description: d.overview?.substring(0,150) || "Upcoming Korean drama",
+                image: d.poster_path ? `https://image.tmdb.org/t/p/original${d.poster_path}` : null,
+                type: "K-Drama", rating: d.vote_average?.toFixed(1) || "N/A", source: "TMDB"
+            }));
+        } catch(e) { console.error("K-Drama error:", e); return []; }
     }
 
     async function fetchCDrama() {
-        // Fallback data karena CORS issues
-        return [
-            { id: 1, title: "The Longest Promise 2", releaseDate: "2026-07-20", description: "Xianxia fantasy sequel with epic romance", image: null, type: "C-Drama", rating: "8.4", source: "MyDramaList" },
-            { id: 2, title: "Lost You Forever Season 3", releaseDate: "2026-08-10", description: "Final season of the epic fantasy romance", image: null, type: "C-Drama", rating: "8.9", source: "MyDramaList" },
-            { id: 3, title: "The Legend of Shen Li 2", releaseDate: "2026-09-05", description: "Continuation of the hit xianxia drama", image: null, type: "C-Drama", rating: "8.6", source: "MyDramaList" },
-            { id: 4, title: "Fox Spirit Matchmaker: Under the Moon", releaseDate: "2026-06-18", description: "Fantasy romance based on manhua", image: null, type: "C-Drama", rating: "8.1", source: "MyDramaList" },
-            { id: 5, title: "The Prisoner of Beauty", releaseDate: "2026-07-01", description: "Historical romance with Liu Yuning", image: null, type: "C-Drama", rating: "8.2", source: "MyDramaList" }
-        ];
+        const url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEYS.tmdb}&with_original_language=zh&sort_by=first_air_date.desc&page=1`;
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            return data.results.slice(0, 20).map(d => ({
+                id: d.id, title: d.name, releaseDate: d.first_air_date || "TBA",
+                description: d.overview?.substring(0,150) || "Upcoming Chinese drama",
+                image: d.poster_path ? `https://image.tmdb.org/t/p/original${d.poster_path}` : null,
+                type: "C-Drama", rating: d.vote_average?.toFixed(1) || "N/A", source: "TMDB"
+            }));
+        } catch(e) { console.error("C-Drama error:", e); return []; }
     }
 
+    // ========== BOOKS (OpenLibrary) ==========
     async function fetchBooks() {
-        const url = `https://openlibrary.org/search.json?q=fiction&sort=new&limit=15`;
+        const url = `https://openlibrary.org/search.json?q=fiction&sort=new&limit=20`;
         const res = await fetch(url);
         const data = await res.json();
         return data.docs.map(b => ({
             id: b.key, title: b.title, releaseDate: b.first_publish_year ? `${b.first_publish_year}` : "TBA",
-            description: b.author_name ? `By ${b.author_name.slice(0,2).join(', ')}` : "Upcoming book",
+            description: b.author_name ? `By ${b.author_name.slice(0,2).join(', ')}` : "Upcoming book release",
             image: b.cover_i ? `https://covers.openlibrary.org/b/id/${b.cover_i}-L.jpg` : null,
             type: "Book", rating: "N/A", source: "OpenLibrary"
         }));
     }
 
-    // ========== RENDER ==========
+    // ========== RENDER (FIXED IMAGE DISPLAY) ==========
     function renderCards(items) {
         if (!items.length) {
             document.getElementById("contentArea").innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><h3>No results found</h3><p>Try another category</p></div>`;
@@ -590,7 +617,9 @@
             const days = calculateDaysLeft(item.releaseDate);
             return `<div class="release-card">
                 <div class="card-badge"><i class="fas fa-calendar"></i> Upcoming</div>
-                <div class="card-image" style="background-image: url('${item.image || 'https://placehold.co/600x400/0A0C10/00FFFF?text=No+Cover'}'); background-size: cover; background-position: center;"></div>
+                <div class="card-image-wrapper">
+                    <img class="card-image" src="${item.image || 'https://placehold.co/600x800/0A0C10/00FFFF?text=No+Cover'}" alt="${escapeHtml(item.title)}" onerror="this.src='https://placehold.co/600x800/0A0C10/00FFFF?text=No+Image'">
+                </div>
                 <div class="card-content">
                     <h3 class="card-title">${escapeHtml(item.title)}</h3>
                     <div class="release-date"><i class="far fa-calendar"></i> ${formatDate(item.releaseDate)}${days ? `<span class="countdown">• ${days}</span>` : ''}</div>
