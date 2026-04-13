@@ -1,0 +1,8 @@
+{
+  "name": "juntracker-vercel",
+  "version": "1.0.0",
+  "description": "JUNTracker with Neon Database on Vercel",
+  "dependencies": {
+    "@neondatabase/serverless": "^0.6.0"
+  }
+}

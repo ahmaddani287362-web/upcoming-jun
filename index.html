@@ -3,17 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JUNTracker | Ultimate Release Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>JUNTracker | Ultimate Upcoming Release Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background: #0A0C10;
             color: #EFF3F8;
             line-height: 1.5;
+            overflow-x: hidden;
         }
+
+        /* Dynamic gradient orbs */
         .orb {
             position: fixed;
             border-radius: 50%;
@@ -24,6 +32,8 @@
         }
         .orb-1 { width: 500px; height: 500px; background: #00FFFF; top: -200px; left: -200px; }
         .orb-2 { width: 600px; height: 600px; background: #FF00FF; bottom: -300px; right: -200px; }
+        .orb-3 { width: 400px; height: 400px; background: #FFD700; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.1; }
+
         .container {
             max-width: 1440px;
             margin: 0 auto;
@@ -31,6 +41,8 @@
             position: relative;
             z-index: 2;
         }
+
+        /* Navbar */
         .navbar {
             padding: 24px 0;
             display: flex;
@@ -43,15 +55,25 @@
             background: rgba(10, 12, 16, 0.85);
             z-index: 100;
         }
+
         .logo {
             font-size: 32px;
             font-weight: 800;
-            background: linear-gradient(135deg, #00FFFF, #FF00FF);
+            background: linear-gradient(135deg, #00FFFF, #FF00FF, #FFD700);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             font-family: 'Space Grotesk', monospace;
+            letter-spacing: -1px;
         }
+
+        .logo span {
+            color: #fff;
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+        }
+
         .badge-api {
             background: rgba(0,255,255,0.1);
             padding: 6px 16px;
@@ -59,12 +81,15 @@
             font-size: 12px;
             border: 1px solid rgba(0,255,255,0.3);
         }
+
+        /* Category Tabs */
         .category-tabs {
             display: flex;
             gap: 16px;
             margin: 48px 0 32px;
             flex-wrap: wrap;
         }
+
         .tab-btn {
             padding: 12px 28px;
             background: rgba(20, 25, 35, 0.8);
@@ -74,14 +99,19 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 15px;
+            backdrop-filter: blur(5px);
         }
+
         .tab-btn i { margin-right: 8px; }
         .tab-btn.active {
             background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 255, 0.2));
             border-color: #00FFFF;
             color: #00FFFF;
-            box-shadow: 0 0 20px rgba(0,255,255,0.3);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
         }
+
+        /* Stats Bar */
         .stats-bar {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 20px;
@@ -93,33 +123,53 @@
             gap: 20px;
             border: 1px solid rgba(255,255,255,0.05);
         }
-        .stats-bar > div {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .stat-item { display: flex; align-items: center; gap: 12px; }
+        .stat-icon { font-size: 28px; }
+        .stat-info h4 { font-size: 12px; color: #8A94A8; }
+        .stat-info p { font-size: 20px; font-weight: 700; color: #00FFFF; }
+
+        /* Cards Grid */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             gap: 28px;
             margin: 32px 0 60px;
         }
+
         .release-card {
             background: linear-gradient(135deg, rgba(18, 22, 32, 0.95), rgba(12, 14, 20, 0.98));
             border-radius: 24px;
             border: 1px solid rgba(0, 255, 255, 0.15);
             overflow: hidden;
-            transition: all 0.4s;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            position: relative;
         }
+
         .release-card:hover {
             transform: translateY(-8px);
             border-color: #00FFFF;
             box-shadow: 0 25px 40px rgba(0,0,0,0.5), 0 0 25px rgba(0,255,255,0.2);
         }
+
+        .card-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 700;
+            z-index: 2;
+            border-left: 2px solid #00FFFF;
+        }
+
         .card-image {
             height: 210px;
             background-size: cover;
             background-position: center;
+            position: relative;
         }
         .card-content { padding: 24px; }
         .card-title { font-size: 22px; font-weight: 700; margin-bottom: 12px; font-family: 'Space Grotesk', monospace; }
@@ -131,38 +181,24 @@
             font-size: 12px;
             color: #00FFFF;
             margin-bottom: 16px;
+            font-weight: 600;
         }
-        .card-desc { color: #A0AABF; font-size: 14px; margin-bottom: 20px; }
+        .card-desc { color: #A0AABF; font-size: 14px; line-height: 1.5; margin-bottom: 20px; }
         .card-meta {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             border-top: 1px solid rgba(255,255,255,0.05);
             padding-top: 16px;
             font-size: 13px;
             color: #7F8A9E;
         }
-        .loading-state, .error-state { text-align: center; padding: 60px; background: rgba(20,25,35,0.5); border-radius: 24px; }
-        .neon-spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(0,255,255,0.2);
-            border-top: 3px solid #00FFFF;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
+        .loading-state, .error-state { text-align: center; padding: 60px; background: rgba(20,25,35,0.5); border-radius: 24px; margin: 40px 0; }
+        .neon-spinner { width: 50px; height: 50px; border: 3px solid rgba(0,255,255,0.2); border-top: 3px solid #00FFFF; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .footer { border-top: 1px solid rgba(0,255,255,0.1); padding: 40px 0; text-align: center; color: #5A6579; margin-top: 40px; }
-        .sync-btn {
-            background: linear-gradient(135deg, #00FFFF, #FF00FF);
-            border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
-            color: #0A0C10;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 12px;
-        }
+
+        .footer { border-top: 1px solid rgba(0,255,255,0.1); padding: 40px 0; text-align: center; color: #5A6579; font-size: 14px; margin-top: 40px; }
+
         @media (max-width: 768px) {
             .container { padding: 0 20px; }
             .cards-grid { grid-template-columns: 1fr; }
@@ -173,11 +209,13 @@
 <body>
 <div class="orb orb-1"></div>
 <div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
 <div class="container">
     <nav class="navbar">
-        <div class="logo">JUN<span style="color:white">Tracker</span></div>
+        <div class="logo">JUN<span>Tracker</span></div>
         <div class="badge-api">
-            <i class="fas fa-database"></i> Neon DB | Vercel
+            <i class="fas fa-plug"></i> 5 APIs Active
         </div>
     </nav>
 
@@ -185,136 +223,255 @@
         <button class="tab-btn active" data-cat="movie"><i class="fas fa-film"></i> Movies</button>
         <button class="tab-btn" data-cat="series"><i class="fas fa-tv"></i> Series</button>
         <button class="tab-btn" data-cat="game"><i class="fas fa-gamepad"></i> Games</button>
-        <button class="tab-btn" data-cat="komik"><i class="fas fa-book-open"></i> Komik</button>
-        <button class="tab-btn" data-cat="books"><i class="fas fa-book"></i> Books</button>
+        <button class="tab-btn" data-cat="komik"><i class="fas fa-book-open"></i> Komik (AniList)</button>
+        <button class="tab-btn" data-cat="books"><i class="fas fa-book"></i> Books (OpenLib)</button>
     </div>
 
     <div class="stats-bar" id="statsBar">
-        <div><i class="fas fa-calendar"></i> <span id="totalCount">--</span> Upcoming</div>
-        <div><i class="fas fa-database"></i> Source: <span id="dataSource">Neon DB</span></div>
-        <div><i class="fas fa-sync-alt"></i> <span id="lastSync">--</span></div>
-        <div><button class="sync-btn" onclick="manualSync()"><i class="fas fa-cloud-upload-alt"></i> Sync Now</button></div>
+        <div class="stat-item"><i class="fas fa-calendar stat-icon"></i><div class="stat-info"><h4>Upcoming</h4><p id="totalCount">--</p></div></div>
+        <div class="stat-item"><i class="fas fa-database stat-icon"></i><div class="stat-info"><h4>Data Source</h4><p id="dataSource">Live API</p></div></div>
+        <div class="stat-item"><i class="fas fa-sync-alt stat-icon"></i><div class="stat-info"><h4>Last Sync</h4><p id="lastSync">Just now</p></div></div>
     </div>
 
     <div id="contentArea">
-        <div class="loading-state"><div class="neon-spinner"></div><p>Loading from Neon Database...</p></div>
+        <div class="loading-state"><div class="neon-spinner"></div><p>Fetching upcoming releases from TMDB | RAWG | AniList | OpenLibrary...</p></div>
     </div>
 
     <footer class="footer">
-        <p>JUNTracker — Powered by Neon PostgreSQL | TMDB · RAWG · AniList · OpenLibrary</p>
-        <p style="font-size: 12px; margin-top: 12px;">🚀 Deployed on Vercel | Database: ap-southeast-1</p>
+        <p><i class="fas fa-shield-alt"></i> JUNTracker — Real-time API Integration | TMDB · RAWG · AniList · OpenLibrary</p>
+        <p style="margin-top: 12px; font-size:12px;">🔐 API Keys: TMDB (a2c120d7d3aaaf1321ffe8a9899ef765) | RAWG (acb03a4a2dd04337b6b62eb78e325c59)</p>
     </footer>
 </div>
 
 <script>
-    // API endpoint (akan di-handle oleh Vercel Serverless Functions)
-    const API_BASE = '/api';
-    let currentCategory = 'movie';
+    // ========================
+    // KONFIGURASI API KEY (YANG DIBERIKAN)
+    // ========================
+    const API_CONFIG = {
+        tmdb: "a2c120d7d3aaaf1321ffe8a9899ef765",
+        rawg: "acb03a4a2dd04337b6b62eb78e325c59"
+    };
 
-    async function loadCategory(category) {
-        const contentDiv = document.getElementById("contentArea");
-        contentDiv.innerHTML = `<div class="loading-state"><div class="neon-spinner"></div><p>Fetching from Neon Database...</p></div>`;
-        
+    // ========================
+    // FETCHER UNTUK MASING-MASING API
+    // ========================
+    
+    // 1. TMDB untuk Movies (upcoming)
+    async function fetchTMDBMovies() {
         try {
-            const response = await fetch(`${API_BASE}/releases?category=${category}`);
-            const result = await response.json();
-            
-            if (result.success && result.data.length) {
-                renderCards(result.data);
-                document.getElementById("totalCount").innerText = result.data.length;
-                document.getElementById("lastSync").innerText = new Date().toLocaleTimeString();
-                document.getElementById("dataSource").innerHTML = `Neon DB (${result.count} items)`;
-            } else {
-                contentDiv.innerHTML = `<div class="error-state">
-                    <i class="fas fa-database"></i>
-                    <p>No data in database for ${category}</p>
-                    <small>Click "Sync Now" to fetch from APIs</small>
-                </div>`;
-            }
+            const url = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_CONFIG.tmdb}&language=en-US&page=1`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.results.slice(0, 12).map(movie => ({
+                id: movie.id,
+                title: movie.title,
+                releaseDate: movie.release_date,
+                description: movie.overview || "No overview available.",
+                image: movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : null,
+                type: "Movie",
+                rating: movie.vote_average?.toFixed(1) || "N/A",
+                source: "TMDB API"
+            }));
         } catch (error) {
-            console.error('Fetch error:', error);
-            contentDiv.innerHTML = `<div class="error-state">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>Error connecting to server</p>
-                <small>Make sure Vercel function is deployed correctly</small>
-            </div>`;
+            console.error("TMDB Movies Error:", error);
+            return [];
         }
     }
 
-    function renderCards(items) {
+    // 2. TMDB untuk Series (TV on air / upcoming)
+    async function fetchTMDSeries() {
+        try {
+            const url = `https://api.themoviedb.org/3/tv/on_the_air?api_key=${API_CONFIG.tmdb}&language=en-US&page=1`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.results.slice(0, 12).map(series => ({
+                id: series.id,
+                title: series.name,
+                releaseDate: series.first_air_date || "TBA 2026",
+                description: series.overview || "Coming soon season.",
+                image: series.poster_path ? `https://image.tmdb.org/t/p/w500${series.poster_path}` : null,
+                type: "Series",
+                rating: series.vote_average?.toFixed(1) || "N/A",
+                source: "TMDB API"
+            }));
+        } catch (error) {
+            console.error("TMDB Series Error:", error);
+            return [];
+        }
+    }
+
+    // 3. RAWG.IO untuk Games (upcoming)
+    async function fetchRAWGGames() {
+        try {
+            const url = `https://api.rawg.io/api/games?key=${API_CONFIG.rawg}&dates=2025-01-01,2027-12-31&ordering=released&page_size=12`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.results.map(game => ({
+                id: game.id,
+                title: game.name,
+                releaseDate: game.released || "TBA",
+                description: game.description_raw || "Upcoming game title.",
+                image: game.background_image,
+                type: "Game",
+                rating: game.rating?.toFixed(1) || "N/A",
+                source: "RAWG API"
+            }));
+        } catch (error) {
+            console.error("RAWG Error:", error);
+            return [];
+        }
+    }
+
+    // 4. AniList GraphQL (Komik / Manga) - Open source, tanpa API key
+    async function fetchAniListManga() {
+        const query = `
+        query {
+            Page(page: 1, perPage: 12) {
+                media(type: MANGA, sort: POPULARITY_DESC, status: NOT_YET_RELEASED) {
+                    id
+                    title { romaji english }
+                    startDate { year month day }
+                    description
+                    coverImage { large }
+                    averageScore
+                }
+            }
+        }`;
+        try {
+            const response = await fetch('https://graphql.anilist.co', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query })
+            });
+            const { data } = await response.json();
+            return data.Page.media.map(manga => {
+                let dateStr = "TBA";
+                if(manga.startDate.year) {
+                    dateStr = `${manga.startDate.year}-${manga.startDate.month || '01'}-${manga.startDate.day || '01'}`;
+                }
+                return {
+                    id: manga.id,
+                    title: manga.title.romaji || manga.title.english || "Upcoming Manga",
+                    releaseDate: dateStr,
+                    description: manga.description?.replace(/<[^>]*>/g, '').substring(0, 150) || "Komik terbaru dari AniList.",
+                    image: manga.coverImage?.large,
+                    type: "Komik",
+                    rating: manga.averageScore ? (manga.averageScore/10).toFixed(1) : "N/A",
+                    source: "AniList (Open)"
+                };
+            });
+        } catch (error) {
+            console.error("AniList Error:", error);
+            return [];
+        }
+    }
+
+    // 5. Open Library (Books) - upcoming / recently published
+    async function fetchOpenLibraryBooks() {
+        try {
+            const url = `https://openlibrary.org/search.json?q=upcoming+fiction&sort=new&limit=12`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.docs.map(book => ({
+                id: book.key,
+                title: book.title,
+                releaseDate: book.first_publish_year ? `${book.first_publish_year}-01-01` : "TBA",
+                description: book.author_name ? `By ${book.author_name.slice(0,2).join(', ')}` : "Upcoming book release.",
+                image: book.cover_i ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg` : null,
+                type: "Book",
+                rating: "N/A",
+                source: "Open Library"
+            }));
+        } catch (error) {
+            console.error("OpenLibrary Error:", error);
+            return [];
+        }
+    }
+
+    // MAIN CONTROLLER
+    let currentTab = "movie";
+
+    async function loadCategory(category) {
+        const contentDiv = document.getElementById("contentArea");
+        contentDiv.innerHTML = `<div class="loading-state"><div class="neon-spinner"></div><p>Fetching from ${category.toUpperCase()} API ...</p></div>`;
+        
+        let items = [];
+        try {
+            switch(category) {
+                case "movie":
+                    items = await fetchTMDBMovies();
+                    break;
+                case "series":
+                    items = await fetchTMDSeries();
+                    break;
+                case "game":
+                    items = await fetchRAWGGames();
+                    break;
+                case "komik":
+                    items = await fetchAniListManga();
+                    break;
+                case "books":
+                    items = await fetchOpenLibraryBooks();
+                    break;
+                default: items = [];
+            }
+        } catch(err) {
+            contentDiv.innerHTML = `<div class="error-state"><i class="fas fa-exclamation-triangle"></i><p>API Error: ${err.message}</p></div>`;
+            return;
+        }
+
+        // update total count di stats
+        document.getElementById("totalCount").innerText = items.length;
+        document.getElementById("dataSource").innerHTML = items[0]?.source?.split(' ')[0] || "API Live";
+        document.getElementById("lastSync").innerHTML = new Date().toLocaleTimeString();
+
+        if(!items.length) {
+            contentDiv.innerHTML = `<div class="error-state"><i class="fas fa-database"></i><p>No upcoming releases found for ${category}.</p></div>`;
+            return;
+        }
+
         const cardsHtml = items.map(item => `
             <div class="release-card">
-                <div class="card-image" style="background-image: linear-gradient(0deg, rgba(5,7,10,0.9), rgba(0,0,0,0.4)), url('${item.image_url || 'https://placehold.co/600x400/0A0C10/00FFFF?text=No+Cover'}'); background-size: cover;">
+                <div class="card-badge"><i class="fas fa-calendar-alt"></i> Upcoming</div>
+                <div class="card-image" style="background-image: linear-gradient(0deg, rgba(5,7,10,0.9), rgba(0,0,0,0.4)), url('${item.image || 'https://placehold.co/600x400/0A0C10/00FFFF?text=No+Cover'}'); background-size: cover;">
                 </div>
                 <div class="card-content">
                     <h3 class="card-title">${escapeHtml(item.title)}</h3>
-                    <span class="release-date"><i class="far fa-clock"></i> ${formatDate(item.release_date)}</span>
-                    <p class="card-desc">${escapeHtml(item.description?.substring(0, 120) || 'No description')}...</p>
+                    <span class="release-date"><i class="far fa-clock"></i> ${formatDate(item.releaseDate)}</span>
+                    <p class="card-desc">${escapeHtml(item.description.substring(0, 120))}${item.description.length > 120 ? '...' : ''}</p>
                     <div class="card-meta">
-                        <span><i class="fas fa-tag"></i> ${item.category}</span>
-                        <span><i class="fas fa-star" style="color: #FFD966;"></i> ${item.rating || 'N/A'}/10</span>
-                        <span><i class="fas fa-cloud"></i> ${item.source_api}</span>
+                        <span><i class="fas fa-tag"></i> ${item.type || category}</span>
+                        <span><i class="fas fa-star" style="color: #FFD966;"></i> ${item.rating}/10</span>
+                        <span><i class="fas fa-cloud-upload-alt"></i> ${item.source}</span>
                     </div>
                 </div>
             </div>
         `).join('');
-        document.getElementById("contentArea").innerHTML = `<div class="cards-grid">${cardsHtml}</div>`;
-    }
-
-    async function manualSync() {
-        const syncBtn = document.querySelector('.sync-btn');
-        const originalText = syncBtn.innerHTML;
-        syncBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Syncing...';
-        syncBtn.disabled = true;
-        
-        try {
-            const response = await fetch(`${API_BASE}/sync`, { method: 'POST' });
-            const result = await response.json();
-            
-            if (result.success) {
-                alert(`Sync completed!\n${result.results.map(r => `${r.category}: ${r.count} items`).join('\n')}`);
-                loadCategory(currentCategory);
-            } else {
-                alert('Sync failed: ' + result.error);
-            }
-        } catch (error) {
-            alert('Error: ' + error.message);
-        } finally {
-            syncBtn.innerHTML = originalText;
-            syncBtn.disabled = false;
-        }
+        contentDiv.innerHTML = `<div class="cards-grid">${cardsHtml}</div>`;
     }
 
     function formatDate(dateStr) {
-        if (!dateStr) return "TBA";
+        if(!dateStr || dateStr === "TBA") return "TBA";
         try {
             const d = new Date(dateStr);
-            if (isNaN(d.getTime())) return dateStr;
-            return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            if(isNaN(d.getTime())) return dateStr;
+            return d.toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
         } catch(e) { return dateStr; }
     }
 
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
+    function escapeHtml(str) { return str?.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}) || ''; }
 
-    // Tab navigation
+    // TAB EVENT
     document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
-            currentCategory = btn.dataset.cat;
-            loadCategory(currentCategory);
+            currentTab = btn.dataset.cat;
+            loadCategory(currentTab);
         });
     });
 
-    // Initial load
+    // INITIAL LOAD
     loadCategory("movie");
 </script>
 </body>
