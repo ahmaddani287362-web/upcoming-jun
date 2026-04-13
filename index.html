@@ -3,27 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JUNTracker | Ultimate Release Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="JUNTracker - Ultimate upcoming release tracker for Movies, Series, Games, Komik & Books">
+    <meta name="theme-color" content="#0A0C10">
+    <title>JUNTracker | Professional Release Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ========== RESET & VARIABLES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0A0C10;
+            --bg-secondary: #12161F;
+            --bg-card: rgba(18, 22, 32, 0.95);
+            --border-glow: rgba(0, 255, 255, 0.2);
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0AABF;
+            --text-muted: #6B7280;
+            --accent-cyan: #00FFFF;
+            --accent-magenta: #FF00FF;
+            --accent-gold: #FFD700;
+            --gradient-1: linear-gradient(135deg, #00FFFF, #FF00FF);
+            --gradient-2: linear-gradient(135deg, #FF00FF, #FFD700);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 25px 40px -12px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 20px rgba(0, 255, 255, 0.15);
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background: #0A0C10;
-            color: #EFF3F8;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.5;
+            overflow-x: hidden;
         }
-        .orb {
+
+        /* ========== ANIMATED BACKGROUND ========== */
+        .bg-orb {
             position: fixed;
             border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.3;
+            filter: blur(120px);
+            opacity: 0.4;
             pointer-events: none;
             z-index: 0;
+            animation: float 20s infinite ease-in-out;
         }
-        .orb-1 { width: 500px; height: 500px; background: #00FFFF; top: -200px; left: -200px; }
-        .orb-2 { width: 600px; height: 600px; background: #FF00FF; bottom: -300px; right: -200px; }
+        .orb-1 { width: 500px; height: 500px; background: var(--accent-cyan); top: -200px; left: -200px; animation-delay: 0s; }
+        .orb-2 { width: 600px; height: 600px; background: var(--accent-magenta); bottom: -300px; right: -200px; animation-delay: 5s; }
+        .orb-3 { width: 400px; height: 400px; background: var(--accent-gold); top: 40%; left: 50%; animation-delay: 10s; opacity: 0.15; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        /* ========== CONTAINER ========== */
         .container {
             max-width: 1440px;
             margin: 0 auto;
@@ -31,156 +71,387 @@
             position: relative;
             z-index: 2;
         }
+
+        /* ========== NAVBAR PREMIUM ========== */
         .navbar {
-            padding: 24px 0;
+            padding: 20px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(0, 255, 255, 0.15);
+            border-bottom: 1px solid var(--border-glow);
             backdrop-filter: blur(12px);
             position: sticky;
             top: 0;
             background: rgba(10, 12, 16, 0.85);
             z-index: 100;
         }
+
         .logo {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 800;
-            background: linear-gradient(135deg, #00FFFF, #FF00FF);
+            background: var(--gradient-1);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             font-family: 'Space Grotesk', monospace;
+            letter-spacing: -1px;
         }
-        .badge-api {
-            background: rgba(0,255,255,0.1);
-            padding: 6px 16px;
+
+        .logo span { color: white; background: none; -webkit-background-clip: unset; }
+
+        .nav-stats {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .stat-pill {
+            background: rgba(0, 255, 255, 0.08);
+            padding: 6px 14px;
             border-radius: 40px;
             font-size: 12px;
-            border: 1px solid rgba(0,255,255,0.3);
-        }
-        .category-tabs {
-            display: flex;
-            gap: 16px;
-            margin: 48px 0 32px;
-            flex-wrap: wrap;
-        }
-        .tab-btn {
-            padding: 12px 28px;
-            background: rgba(20, 25, 35, 0.8);
             border: 1px solid rgba(0, 255, 255, 0.2);
-            border-radius: 60px;
-            color: #C0C8DD;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .tab-btn i { margin-right: 8px; }
-        .tab-btn.active {
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 255, 0.2));
-            border-color: #00FFFF;
-            color: #00FFFF;
-            box-shadow: 0 0 20px rgba(0,255,255,0.3);
-        }
-        .stats-bar {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 20px;
-            padding: 16px 24px;
-            margin-bottom: 32px;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .stats-bar > div {
             display: flex;
             align-items: center;
             gap: 8px;
         }
+
+        .stat-pill i { color: var(--accent-cyan); font-size: 12px; }
+
+        /* ========== SEARCH BAR ========== */
+        .search-section {
+            margin: 32px 0 24px;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            display: flex;
+            align-items: center;
+            background: rgba(18, 22, 32, 0.8);
+            border: 1px solid var(--border-glow);
+            border-radius: 60px;
+            padding: 8px 20px;
+            transition: all 0.3s;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .search-box i { color: var(--text-muted); margin-right: 12px; }
+        .search-box input {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+        }
+        .search-box input::placeholder { color: var(--text-muted); }
+
+        /* ========== CATEGORY TABS ========== */
+        .category-tabs {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+
+        .tab-btn {
+            padding: 10px 24px;
+            background: rgba(20, 25, 35, 0.8);
+            border: 1px solid var(--border-glow);
+            border-radius: 60px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+        }
+
+        .tab-btn i { margin-right: 8px; font-size: 13px; }
+
+        .tab-btn:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.15), rgba(255, 0, 255, 0.15));
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            box-shadow: var(--shadow-glow);
+        }
+
+        /* ========== STATS BAR ========== */
+        .stats-bar {
+            background: linear-gradient(135deg, rgba(18, 22, 32, 0.6), rgba(10, 12, 16, 0.8));
+            border-radius: 20px;
+            padding: 16px 28px;
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--accent-cyan);
+        }
+
+        .stat-info h4 { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .stat-info p { font-size: 20px; font-weight: 700; color: white; }
+
+        /* ========== CARDS GRID ========== */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 28px;
             margin: 32px 0 60px;
         }
+
+        /* Premium Card Design */
         .release-card {
-            background: linear-gradient(135deg, rgba(18, 22, 32, 0.95), rgba(12, 14, 20, 0.98));
+            position: relative;
+            background: var(--bg-card);
             border-radius: 24px;
-            border: 1px solid rgba(0, 255, 255, 0.15);
             overflow: hidden;
-            transition: all 0.4s;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(0, 255, 255, 0.1);
         }
+
+        .release-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-1);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .release-card:hover::before {
+            transform: scaleX(1);
+        }
+
         .release-card:hover {
             transform: translateY(-8px);
-            border-color: #00FFFF;
-            box-shadow: 0 25px 40px rgba(0,0,0,0.5), 0 0 25px rgba(0,255,255,0.2);
+            border-color: rgba(0, 255, 255, 0.3);
+            box-shadow: var(--shadow-lg), 0 0 30px rgba(0, 255, 255, 0.15);
         }
+
+        .card-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            padding: 5px 12px;
+            border-radius: 40px;
+            font-size: 10px;
+            font-weight: 600;
+            z-index: 2;
+            border-left: 2px solid var(--accent-cyan);
+            letter-spacing: 0.5px;
+        }
+
         .card-image {
-            height: 210px;
+            height: 200px;
             background-size: cover;
             background-position: center;
+            position: relative;
+            transition: transform 0.5s;
         }
-        .card-content { padding: 24px; }
-        .card-title { font-size: 22px; font-weight: 700; margin-bottom: 12px; font-family: 'Space Grotesk', monospace; }
+
+        .release-card:hover .card-image {
+            transform: scale(1.02);
+        }
+
+        .card-image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        }
+
+        .card-content { padding: 20px; }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-family: 'Space Grotesk', monospace;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
         .release-date {
-            display: inline-block;
-            background: rgba(0, 255, 255, 0.12);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 255, 255, 0.1);
             padding: 4px 12px;
             border-radius: 20px;
-            font-size: 12px;
-            color: #00FFFF;
-            margin-bottom: 16px;
+            font-size: 11px;
+            color: var(--accent-cyan);
+            margin-bottom: 12px;
+            font-weight: 500;
         }
-        .card-desc { color: #A0AABF; font-size: 14px; margin-bottom: 20px; }
+
+        .countdown {
+            font-size: 10px;
+            color: var(--accent-gold);
+            margin-left: 6px;
+        }
+
+        .card-desc {
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
         .card-meta {
             display: flex;
             justify-content: space-between;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 16px;
-            font-size: 13px;
-            color: #7F8A9E;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 14px;
+            font-size: 12px;
+            color: var(--text-muted);
         }
-        .loading-state, .error-state { text-align: center; padding: 60px; background: rgba(20,25,35,0.5); border-radius: 24px; }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .rating i { color: var(--accent-gold); font-size: 11px; }
+
+        .source {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .source i { font-size: 10px; }
+
+        /* ========== LOADING & EMPTY STATES ========== */
+        .loading-state, .error-state, .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            background: rgba(20, 25, 35, 0.4);
+            border-radius: 32px;
+            margin: 40px 0;
+            backdrop-filter: blur(10px);
+        }
+
         .neon-spinner {
             width: 50px;
             height: 50px;
-            border: 3px solid rgba(0,255,255,0.2);
-            border-top: 3px solid #00FFFF;
+            border: 3px solid rgba(0, 255, 255, 0.15);
+            border-top: 3px solid var(--accent-cyan);
+            border-right: 3px solid var(--accent-magenta);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 0.8s linear infinite;
             margin: 0 auto 20px;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .footer { border-top: 1px solid rgba(0,255,255,0.1); padding: 40px 0; text-align: center; color: #5A6579; margin-top: 40px; }
-        .sync-btn {
-            background: linear-gradient(135deg, #00FFFF, #FF00FF);
-            border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
-            color: #0A0C10;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 12px;
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .empty-state i { font-size: 64px; color: var(--text-muted); margin-bottom: 20px; opacity: 0.5; }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 40px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
         }
+
+        /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
             .container { padding: 0 20px; }
-            .cards-grid { grid-template-columns: 1fr; }
-            .tab-btn { padding: 8px 18px; font-size: 13px; }
+            .cards-grid { grid-template-columns: 1fr; gap: 20px; }
+            .tab-btn { padding: 8px 16px; font-size: 12px; }
+            .stats-bar { flex-direction: column; align-items: flex-start; }
+            .navbar { flex-direction: column; gap: 12px; text-align: center; }
         }
+
+        @media (max-width: 480px) {
+            .search-container { flex-direction: column; }
+            .search-box { width: 100%; }
+        }
+
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1A1E26; }
+        ::-webkit-scrollbar-thumb { background: var(--accent-cyan); border-radius: 10px; }
     </style>
 </head>
 <body>
-<div class="orb orb-1"></div>
-<div class="orb orb-2"></div>
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+<div class="bg-orb orb-3"></div>
+
 <div class="container">
     <nav class="navbar">
-        <div class="logo">JUN<span style="color:white">Tracker</span></div>
-        <div class="badge-api">
-            <i class="fas fa-database"></i> Live APIs
+        <div class="logo">JUN<span>Tracker</span></div>
+        <div class="nav-stats">
+            <div class="stat-pill"><i class="fas fa-database"></i> Live APIs</div>
+            <div class="stat-pill"><i class="fas fa-sync-alt"></i> Real-time</div>
         </div>
     </nav>
 
+    <!-- Search Section -->
+    <div class="search-section">
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search titles... (Ctrl+K)">
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Tabs -->
     <div class="category-tabs" id="categoryTabs">
         <button class="tab-btn active" data-cat="movie"><i class="fas fa-film"></i> Movies</button>
         <button class="tab-btn" data-cat="series"><i class="fas fa-tv"></i> Series</button>
@@ -189,37 +460,70 @@
         <button class="tab-btn" data-cat="books"><i class="fas fa-book"></i> Books</button>
     </div>
 
+    <!-- Stats Bar -->
     <div class="stats-bar" id="statsBar">
-        <div><i class="fas fa-calendar"></i> <span id="totalCount">--</span> Upcoming</div>
-        <div><i class="fas fa-cloud-upload-alt"></i> Source: <span id="dataSource">Live API</span></div>
-        <div><i class="fas fa-sync-alt"></i> <span id="lastSync">Just now</span></div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div class="stat-info">
+                <h4>Total Releases</h4>
+                <p id="totalCount">--</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="stat-info">
+                <h4>Data Source</h4>
+                <p id="dataSource">TMDB · RAWG · AniList</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-info">
+                <h4>Last Updated</h4>
+                <p id="lastSync">Just now</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-chart-simple"></i></div>
+            <div class="stat-info">
+                <h4>Avg Rating</h4>
+                <p id="avgRating">--</p>
+            </div>
+        </div>
     </div>
 
+    <!-- Content Area -->
     <div id="contentArea">
-        <div class="loading-state"><div class="neon-spinner"></div><p>Fetching upcoming releases from APIs...</p></div>
+        <div class="loading-state">
+            <div class="neon-spinner"></div>
+            <p>Fetching upcoming releases from APIs...</p>
+        </div>
     </div>
 
     <footer class="footer">
-        <p>JUNTracker — Powered by TMDB · RAWG · AniList · OpenLibrary</p>
-        <p style="font-size: 12px; margin-top: 12px;">🚀 Deployed on Vercel | Real-time API Data</p>
+        <p>© 2026 JUNTracker — Real-time data from TMDB · RAWG · AniList · OpenLibrary</p>
+        <p style="margin-top: 12px; font-size: 11px;">🔍 Press <kbd>Ctrl</kbd> + <kbd>K</kbd> to focus search | Data updates automatically on each refresh</p>
     </footer>
 </div>
 
 <script>
-    // API Keys
+    // ========== API CONFIGURATION ==========
     const API_KEYS = {
         tmdb: 'a2c120d7d3aaaf1321ffe8a9899ef765',
         rawg: 'acb03a4a2dd04337b6b62eb78e325c59'
     };
     
     let currentCategory = 'movie';
+    let currentData = [];
+    let searchQuery = '';
 
-    // Fetch Movies from TMDB
+    // ========== API FETCHERS ==========
     async function fetchMovies() {
         const url = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEYS.tmdb}&language=en-US&page=1`;
         const response = await fetch(url);
         const data = await response.json();
-        return data.results.slice(0, 12).map(movie => ({
+        return data.results.slice(0, 20).map(movie => ({
+            id: movie.id,
             title: movie.title,
             releaseDate: movie.release_date,
             description: movie.overview || "No description available.",
@@ -230,12 +534,12 @@
         }));
     }
 
-    // Fetch Series from TMDB
     async function fetchSeries() {
         const url = `https://api.themoviedb.org/3/tv/on_the_air?api_key=${API_KEYS.tmdb}&language=en-US&page=1`;
         const response = await fetch(url);
         const data = await response.json();
-        return data.results.slice(0, 12).map(series => ({
+        return data.results.slice(0, 20).map(series => ({
+            id: series.id,
             title: series.name,
             releaseDate: series.first_air_date || "TBA",
             description: series.overview || "Coming soon.",
@@ -246,12 +550,12 @@
         }));
     }
 
-    // Fetch Games from RAWG
     async function fetchGames() {
-        const url = `https://api.rawg.io/api/games?key=${API_KEYS.rawg}&dates=2025-01-01,2027-12-31&ordering=released&page_size=12`;
+        const url = `https://api.rawg.io/api/games?key=${API_KEYS.rawg}&dates=2025-01-01,2027-12-31&ordering=released&page_size=20`;
         const response = await fetch(url);
         const data = await response.json();
         return data.results.map(game => ({
+            id: game.id,
             title: game.name,
             releaseDate: game.released || "TBA",
             description: game.description_raw || "Upcoming game release.",
@@ -262,11 +566,11 @@
         }));
     }
 
-    // Fetch Komik from AniList
     async function fetchKomik() {
         const query = `{
-            Page(page: 1, perPage: 12) {
+            Page(page: 1, perPage: 20) {
                 media(type: MANGA, sort: POPULARITY_DESC, status: NOT_YET_RELEASED) {
+                    id
                     title { romaji english }
                     startDate { year month day }
                     description
@@ -287,9 +591,10 @@
                 dateStr = `${manga.startDate.year}-${String(manga.startDate.month || 1).padStart(2,'0')}-${String(manga.startDate.day || 1).padStart(2,'0')}`;
             }
             return {
+                id: manga.id,
                 title: manga.title.romaji || manga.title.english || "Upcoming Manga",
                 releaseDate: dateStr,
-                description: manga.description?.replace(/<[^>]*>/g, '').substring(0, 150) || "Komik terbaru.",
+                description: manga.description?.replace(/<[^>]*>/g, '').substring(0, 200) || "Komik terbaru.",
                 image: manga.coverImage?.large,
                 type: "Komik",
                 rating: manga.averageScore ? (manga.averageScore/10).toFixed(1) : "N/A",
@@ -298,15 +603,15 @@
         });
     }
 
-    // Fetch Books from OpenLibrary
     async function fetchBooks() {
-        const url = `https://openlibrary.org/search.json?q=fiction&sort=new&limit=12`;
+        const url = `https://openlibrary.org/search.json?q=fiction&sort=new&limit=20`;
         const response = await fetch(url);
         const data = await response.json();
         return data.docs.map(book => ({
+            id: book.key,
             title: book.title,
             releaseDate: book.first_publish_year ? `${book.first_publish_year}` : "TBA",
-            description: book.author_name ? `By ${book.author_name.slice(0,2).join(', ')}` : "Upcoming book.",
+            description: book.author_name ? `By ${book.author_name.slice(0, 2).join(', ')}` : "Upcoming book.",
             image: book.cover_i ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg` : null,
             type: "Book",
             rating: "N/A",
@@ -314,6 +619,87 @@
         }));
     }
 
+    // ========== HELPER FUNCTIONS ==========
+    function calculateDaysLeft(dateStr) {
+        if (!dateStr || dateStr === "TBA") return null;
+        try {
+            const release = new Date(dateStr);
+            const today = new Date();
+            const diff = Math.ceil((release - today) / (1000 * 60 * 60 * 24));
+            if (diff < 0) return null;
+            if (diff === 0) return "Today!";
+            if (diff === 1) return "Tomorrow!";
+            return `${diff} days left`;
+        } catch(e) { return null; }
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr || dateStr === "TBA") return "TBA";
+        try {
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return dateStr;
+            return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        } catch(e) { return dateStr; }
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // ========== RENDER FUNCTION ==========
+    function renderCards(items) {
+        if (!items.length) {
+            document.getElementById("contentArea").innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <h3>No results found</h3>
+                    <p style="color: #6B7280; margin-top: 8px;">Try adjusting your search or select a different category</p>
+                </div>
+            `;
+            return;
+        }
+
+        const cardsHtml = items.map(item => {
+            const daysLeft = calculateDaysLeft(item.releaseDate);
+            return `
+                <div class="release-card">
+                    <div class="card-badge">
+                        <i class="fas fa-calendar-alt"></i> Upcoming
+                    </div>
+                    <div class="card-image" style="background-image: linear-gradient(0deg, rgba(5,7,10,0.9), rgba(0,0,0,0.3)), url('${item.image || 'https://placehold.co/600x400/0A0C10/00FFFF?text=No+Cover'}'); background-size: cover;">
+                        <div class="card-image-overlay"></div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${escapeHtml(item.title)}</h3>
+                        <div class="release-date">
+                            <i class="far fa-calendar-alt"></i> ${formatDate(item.releaseDate)}
+                            ${daysLeft ? `<span class="countdown">• ${daysLeft}</span>` : ''}
+                        </div>
+                        <p class="card-desc">${escapeHtml(item.description.substring(0, 120))}${item.description.length > 120 ? '...' : ''}</p>
+                        <div class="card-meta">
+                            <span class="rating"><i class="fas fa-star"></i> ${item.rating}/10</span>
+                            <span class="source"><i class="fas fa-cloud"></i> ${item.source}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        document.getElementById("contentArea").innerHTML = `<div class="cards-grid">${cardsHtml}</div>`;
+        
+        // Update stats
+        document.getElementById("totalCount").innerHTML = items.length;
+        const avgRating = items.filter(i => i.rating !== "N/A").reduce((sum, i, _, arr) => sum + parseFloat(i.rating), 0) / items.filter(i => i.rating !== "N/A").length || 0;
+        document.getElementById("avgRating").innerHTML = avgRating ? avgRating.toFixed(1) + "/10" : "N/A";
+    }
+
+    // ========== LOAD CATEGORY WITH SEARCH ==========
     async function loadCategory(category) {
         const contentDiv = document.getElementById("contentArea");
         contentDiv.innerHTML = `<div class="loading-state"><div class="neon-spinner"></div><p>Fetching from ${category.toUpperCase()} API...</p></div>`;
@@ -327,66 +713,50 @@
                 case "komik": items = await fetchKomik(); break;
                 case "books": items = await fetchBooks(); break;
             }
+            currentData = items;
         } catch(err) {
             contentDiv.innerHTML = `<div class="error-state"><i class="fas fa-exclamation-triangle"></i><p>API Error: ${err.message}</p></div>`;
             return;
         }
 
-        document.getElementById("totalCount").innerText = items.length;
-        document.getElementById("dataSource").innerHTML = items[0]?.source || "API";
+        document.getElementById("dataSource").innerHTML = items[0]?.source?.split(' ')[0] || "API";
         document.getElementById("lastSync").innerHTML = new Date().toLocaleTimeString();
-
-        if(!items.length) {
-            contentDiv.innerHTML = `<div class="error-state"><p>No upcoming releases found for ${category}.</p></div>`;
-            return;
-        }
-
-        const cardsHtml = items.map(item => `
-            <div class="release-card">
-                <div class="card-image" style="background-image: linear-gradient(0deg, rgba(5,7,10,0.9), rgba(0,0,0,0.4)), url('${item.image || 'https://placehold.co/600x400/0A0C10/00FFFF?text=No+Cover'}'); background-size: cover;">
-                </div>
-                <div class="card-content">
-                    <h3 class="card-title">${escapeHtml(item.title)}</h3>
-                    <span class="release-date"><i class="far fa-clock"></i> ${formatDate(item.releaseDate)}</span>
-                    <p class="card-desc">${escapeHtml(item.description.substring(0, 120))}...</p>
-                    <div class="card-meta">
-                        <span><i class="fas fa-tag"></i> ${item.type}</span>
-                        <span><i class="fas fa-star" style="color: #FFD966;"></i> ${item.rating}/10</span>
-                        <span><i class="fas fa-cloud-upload-alt"></i> ${item.source}</span>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-        contentDiv.innerHTML = `<div class="cards-grid">${cardsHtml}</div>`;
+        
+        // Apply search filter
+        const filtered = searchQuery ? items.filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase())) : items;
+        renderCards(filtered);
     }
 
-    function formatDate(dateStr) {
-        if(!dateStr || dateStr === "TBA") return "TBA";
-        try {
-            const d = new Date(dateStr);
-            if(isNaN(d.getTime())) return dateStr;
-            return d.toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
-        } catch(e) { return dateStr; }
+    // ========== SEARCH HANDLER ==========
+    function handleSearch() {
+        const filtered = currentData.filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()));
+        renderCards(filtered);
     }
 
-    function escapeHtml(str) {
-        if(!str) return '';
-        return str.replace(/[&<>]/g, function(m){
-            if(m==='&') return '&amp;';
-            if(m==='<') return '&lt;';
-            if(m==='>') return '&gt;';
-            return m;
-        });
-    }
-
-    // Tab navigation
+    // ========== EVENT LISTENERS ==========
     document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
             currentCategory = btn.dataset.cat;
+            searchQuery = '';
+            document.getElementById("searchInput").value = '';
             loadCategory(currentCategory);
         });
+    });
+
+    const searchInput = document.getElementById("searchInput");
+    searchInput.addEventListener("input", (e) => {
+        searchQuery = e.target.value;
+        handleSearch();
+    });
+
+    // Ctrl+K focus search
+    document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            searchInput.focus();
+        }
     });
 
     // Initial load
