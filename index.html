@@ -517,54 +517,168 @@
         } catch(e) { console.error("Manga error:", e); return []; }
     }
 
-    async function fetchManhwa() {
-        try {
-            const res = await fetch('https://graphql.anilist.co', { 
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify({
-                    query: `query { Page(page: 1 perPage: 20) { media(type: MANGA format: MANHWA sort: POPULARITY_DESC status: NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { extraLarge } averageScore } } }`
-                })
-            });
-            const data = await res.json();
-            if (data.errors) throw new Error(data.errors[0].message);
-            return data.data.Page.media.map(m => {
-                let date = "TBA";
-                if(m.startDate.year) date = `${m.startDate.year}-${String(m.startDate.month||1).padStart(2,'0')}-${String(m.startDate.day||1).padStart(2,'0')}`;
-                return {
-                    id: m.id, title: m.title.romaji, releaseDate: date,
-                    description: m.description?.replace(/<[^>]*>/g,'').substring(0,150) || "Upcoming manhwa release",
-                    image: m.coverImage?.extraLarge, type: "Manhwa",
-                    rating: m.averageScore ? (m.averageScore/10).toFixed(1) : "N/A", source: "AniList"
-                };
-            });
-        } catch(e) { console.error("Manhwa error:", e); return []; }
+   // ========== MANHWA via MangaDex API (Korea) ==========
+async function fetchManhwa() {
+    const clientId = 'personal-client-29897a59-b1cf-45d4-bcaf-5b25a5bcb713-ba9550b2';
+    const url = `https://api.mangadex.org/manga?limit=20&includes[]=cover_art&order[followedCount]=desc&contentRating[]=safe&contentRating[]=suggestive&originalLanguage[]=ko&availableTranslatedLanguage[]=en&publicationDemographic[]=shonen&publicationDemographic[]=shoujo&publicationDemographic[]=seinen&publicationDemographic[]=josei`;
+    
+    try {
+        const res = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${clientId}`
+            }
+        });
+        const data = await res.json();
+        
+        if (!data.data) return [];
+        
+        return data.data.slice(0, 15).map(manga => {
+            // Ambil cover art filename
+            let coverFile = null;
+            const coverRelation = manga.relationships?.find(r => r.type === 'cover_art');
+            if (coverRelation) {
+                coverFile = coverRelation.attributes?.fileName;
+            }
+            
+            // Build cover URL
+            const coverUrl = coverFile ? `https://uploads.mangadex.org/covers/${manga.id}/${coverFile}` : null;
+            
+            // Format tanggal rilis (tahun saja karena MangaDex tidak selalu punya tanggal exact)
+            let releaseYear = "TBA";
+            if (manga.attributes?.year) {
+                releaseYear = manga.attributes.year;
+            } else if (manga.attributes?.createdAt) {
+                releaseYear = new Date(manga.attributes.createdAt).getFullYear();
+            }
+            
+            // Ambil judul (prioritas en > jp > default)
+            let title = "Unknown Title";
+            if (manga.attributes?.title) {
+                title = manga.attributes.title.en || 
+                        manga.attributes.title.jp || 
+                        Object.values(manga.attributes.title)[0] || 
+                        "Unknown Title";
+            }
+            
+            // Ambil deskripsi
+            let description = "Upcoming manhwa release";
+            if (manga.attributes?.description) {
+                description = manga.attributes.description.en || 
+                             Object.values(manga.attributes.description)[0] || 
+                             description;
+                description = description.replace(/<[^>]*>/g, '').substring(0, 150);
+            }
+            
+            return {
+                id: manga.id,
+                title: title,
+                releaseDate: releaseYear.toString(),
+                description: description,
+                image: coverUrl,
+                type: "Manhwa",
+                rating: manga.attributes?.rating?.bayesian || "N/A",
+                source: "MangaDex"
+            };
+        });
+    } catch(e) {
+        console.error("Manhwa API error:", e);
+        return [];
     }
+}
 
-    async function fetchManhua() {
-        try {
-            const res = await fetch('https://graphql.anilist.co', { 
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify({
-                    query: `query { Page(page: 1 perPage: 20) { media(type: MANGA format: MANHUA sort: POPULARITY_DESC status: NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { extraLarge } averageScore } } }`
-                })
-            });
-            const data = await res.json();
-            if (data.errors) throw new Error(data.errors[0].message);
-            return data.data.Page.media.map(m => {
-                let date = "TBA";
-                if(m.startDate.year) date = `${m.startDate.year}-${String(m.startDate.month||1).padStart(2,'0')}-${String(m.startDate.day||1).padStart(2,'0')}`;
-                return {
-                    id: m.id, title: m.title.romaji, releaseDate: date,
-                    description: m.description?.replace(/<[^>]*>/g,'').substring(0,150) || "Upcoming manhua release",
-                    image: m.coverImage?.extraLarge, type: "Manhua",
-                    rating: m.averageScore ? (m.averageScore/10).toFixed(1) : "N/A", source: "AniList"
-                };
-            });
-        } catch(e) { console.error("Manhua error:", e); return []; }
+// ========== MANHUA via MangaDex API (China) ==========
+async function fetchManhua() {
+    const clientId = 'personal-client-29897a59-b1cf-45d4-bcaf-5b25a5bcb713-ba9550b2';
+    const url = `https://api.mangadex.org/manga?limit=20&includes[]=cover_art&order[followedCount]=desc&contentRating[]=safe&contentRating[]=suggestive&originalLanguage[]=zh&availableTranslatedLanguage[]=en&publicationDemographic[]=shonen&publicationDemographic[]=shoujo&publicationDemographic[]=seinen&publicationDemographic[]=josei`;
+    
+    try {
+        const res = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${clientId}`
+            }
+        });
+        const data = await res.json();
+        
+        if (!data.data) return [];
+        
+        return data.data.slice(0, 15).map(manga => {
+            // Ambil cover art filename
+            let coverFile = null;
+            const coverRelation = manga.relationships?.find(r => r.type === 'cover_art');
+            if (coverRelation) {
+                coverFile = coverRelation.attributes?.fileName;
+            }
+            
+            // Build cover URL
+            const coverUrl = coverFile ? `https://uploads.mangadex.org/covers/${manga.id}/${coverFile}` : null;
+            
+            // Format tanggal rilis
+            let releaseYear = "TBA";
+            if (manga.attributes?.year) {
+                releaseYear = manga.attributes.year;
+            } else if (manga.attributes?.createdAt) {
+                releaseYear = new Date(manga.attributes.createdAt).getFullYear();
+            }
+            
+            // Ambil judul
+            let title = "Unknown Title";
+            if (manga.attributes?.title) {
+                title = manga.attributes.title.en || 
+                        manga.attributes.title.zh || 
+                        Object.values(manga.attributes.title)[0] || 
+                        "Unknown Title";
+            }
+            
+            // Ambil deskripsi
+            let description = "Upcoming manhua release";
+            if (manga.attributes?.description) {
+                description = manga.attributes.description.en || 
+                             Object.values(manga.attributes.description)[0] || 
+                             description;
+                description = description.replace(/<[^>]*>/g, '').substring(0, 150);
+            }
+            
+            return {
+                id: manga.id,
+                title: title,
+                releaseDate: releaseYear.toString(),
+                description: description,
+                image: coverUrl,
+                type: "Manhua",
+                rating: manga.attributes?.rating?.bayesian?.toFixed(1) || "N/A",
+                source: "MangaDex"
+            };
+        });
+    } catch(e) {
+        console.error("Manhua API error:", e);
+        return [];
     }
+}
 
+// ========== MANGA tetap pakai AniList (Jepang) ==========
+async function fetchManga() {
+    try {
+        const res = await fetch('https://graphql.anilist.co', { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({
+                query: `query { Page(page: 1 perPage: 20) { media(type: MANGA countryOfOrigin: JP sort: POPULARITY_DESC status: NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { extraLarge } averageScore } } }`
+            })
+        });
+        const data = await res.json();
+        if (data.errors) throw new Error(data.errors[0].message);
+        return data.data.Page.media.map(m => {
+            let date = "TBA";
+            if(m.startDate.year) date = `${m.startDate.year}-${String(m.startDate.month||1).padStart(2,'0')}-${String(m.startDate.day||1).padStart(2,'0')}`;
+            return {
+                id: m.id, title: m.title.romaji, releaseDate: date,
+                description: m.description?.replace(/<[^>]*>/g,'').substring(0,150) || "Upcoming manga release",
+                image: m.coverImage?.extraLarge, type: "Manga",
+                rating: m.averageScore ? (m.averageScore/10).toFixed(1) : "N/A", source: "AniList"
+            };
+        });
+    } catch(e) { console.error("Manga error:", e); return []; }
+}
     // ========== K-DRAMA & C-DRAMA via TMDB (Upcoming) ==========
     async function fetchKDrama() {
         const url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEYS.tmdb}&with_original_language=ko&sort_by=first_air_date.desc&page=1`;
