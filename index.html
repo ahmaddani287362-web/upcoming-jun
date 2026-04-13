@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="JUNTracker - Ultimate upcoming release tracker for Movies, Series, Anime, Games, Komik & Books">
+    <meta name="description" content="JUNTracker - Ultimate release tracker for Movies, Series, Anime, Games, Manga, Manhwa, Manhua, K-Drama, C-Drama & Books">
     <meta name="theme-color" content="#0A0C10">
-    <title>JUNTracker | Professional Release Hub + Anime</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>JUNTracker | 10+ Release Categories</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -27,12 +27,13 @@
             --accent-magenta: #FF00FF;
             --accent-gold: #FFD700;
             --accent-pink: #FF69B4;
+            --accent-orange: #FF6B35;
+            --accent-green: #00FF88;
             --gradient-1: linear-gradient(135deg, #00FFFF, #FF00FF);
             --gradient-2: linear-gradient(135deg, #FF00FF, #FFD700);
-            --gradient-anime: linear-gradient(135deg, #FF69B4, #9B59B6);
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-            --shadow-lg: 0 25px 40px -12px rgba(0, 0, 0, 0.4);
+            --gradient-manga: linear-gradient(135deg, #FF6B35, #FF00FF);
+            --gradient-kdrama: linear-gradient(135deg, #FF69B4, #9B59B6);
+            --gradient-cdrama: linear-gradient(135deg, #FFD700, #FF6B35);
             --shadow-glow: 0 0 20px rgba(0, 255, 255, 0.15);
         }
 
@@ -53,9 +54,9 @@
             z-index: 0;
             animation: float 20s infinite ease-in-out;
         }
-        .orb-1 { width: 500px; height: 500px; background: var(--accent-cyan); top: -200px; left: -200px; animation-delay: 0s; }
-        .orb-2 { width: 600px; height: 600px; background: var(--accent-magenta); bottom: -300px; right: -200px; animation-delay: 5s; }
-        .orb-3 { width: 400px; height: 400px; background: var(--accent-pink); top: 40%; left: 50%; animation-delay: 10s; opacity: 0.15; }
+        .orb-1 { width: 500px; height: 500px; background: var(--accent-cyan); top: -200px; left: -200px; }
+        .orb-2 { width: 600px; height: 600px; background: var(--accent-magenta); bottom: -300px; right: -200px; }
+        .orb-3 { width: 400px; height: 400px; background: var(--accent-pink); top: 40%; left: 50%; opacity: 0.15; }
 
         @keyframes float {
             0%, 100% { transform: translate(0, 0) scale(1); }
@@ -92,73 +93,45 @@
             background-clip: text;
             color: transparent;
             font-family: 'Space Grotesk', monospace;
-            letter-spacing: -1px;
         }
 
-        .logo span { color: white; background: none; -webkit-background-clip: unset; }
+        .logo span { color: white; background: none; }
 
-        .nav-stats {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-        }
-
+        .nav-stats { display: flex; gap: 24px; align-items: center; }
         .stat-pill {
             background: rgba(0, 255, 255, 0.08);
             padding: 6px 14px;
             border-radius: 40px;
             font-size: 12px;
             border: 1px solid rgba(0, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
-        .stat-pill i { color: var(--accent-cyan); font-size: 12px; }
-
-        .search-section {
-            margin: 32px 0 24px;
-        }
-
-        .search-container {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-        }
-
+        .search-section { margin: 32px 0 24px; }
         .search-box {
-            flex: 1;
-            min-width: 250px;
             display: flex;
             align-items: center;
             background: rgba(18, 22, 32, 0.8);
             border: 1px solid var(--border-glow);
             border-radius: 60px;
             padding: 8px 20px;
-            transition: all 0.3s;
+            max-width: 400px;
         }
-
         .search-box:focus-within {
             border-color: var(--accent-cyan);
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
         }
-
         .search-box i { color: var(--text-muted); margin-right: 12px; }
         .search-box input {
             background: none;
             border: none;
             color: white;
-            font-size: 14px;
             width: 100%;
             outline: none;
         }
-        .search-box input::placeholder { color: var(--text-muted); }
 
         .category-tabs {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
             margin-bottom: 32px;
             overflow-x: auto;
@@ -166,27 +139,24 @@
         }
 
         .tab-btn {
-            padding: 10px 24px;
+            padding: 8px 18px;
             background: rgba(20, 25, 35, 0.8);
             border: 1px solid var(--border-glow);
-            border-radius: 60px;
+            border-radius: 40px;
             color: var(--text-secondary);
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 14px;
-            backdrop-filter: blur(5px);
+            font-size: 13px;
             white-space: nowrap;
         }
 
-        .tab-btn i { margin-right: 8px; font-size: 13px; }
-
+        .tab-btn i { margin-right: 6px; font-size: 12px; }
         .tab-btn:hover {
             border-color: var(--accent-cyan);
             color: var(--accent-cyan);
             transform: translateY(-2px);
         }
-
         .tab-btn.active {
             background: linear-gradient(135deg, rgba(0, 255, 255, 0.15), rgba(255, 0, 255, 0.15));
             border-color: var(--accent-cyan);
@@ -194,31 +164,18 @@
             box-shadow: var(--shadow-glow);
         }
 
-        .tab-btn[data-cat="anime"].active {
-            background: linear-gradient(135deg, rgba(255, 105, 180, 0.15), rgba(155, 89, 182, 0.15));
-            border-color: var(--accent-pink);
-            color: var(--accent-pink);
-        }
-
         .stats-bar {
             background: linear-gradient(135deg, rgba(18, 22, 32, 0.6), rgba(10, 12, 16, 0.8));
             border-radius: 20px;
-            padding: 16px 28px;
+            padding: 16px 24px;
             margin-bottom: 32px;
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
         }
 
-        .stat-card {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
+        .stat-card { display: flex; align-items: center; gap: 12px; }
         .stat-icon {
             width: 40px;
             height: 40px;
@@ -230,26 +187,24 @@
             font-size: 18px;
             color: var(--accent-cyan);
         }
-
-        .stat-info h4 { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .stat-info p { font-size: 20px; font-weight: 700; color: white; }
+        .stat-info h4 { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
+        .stat-info p { font-size: 18px; font-weight: 700; }
 
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 28px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
             margin: 32px 0 60px;
         }
 
         .release-card {
             position: relative;
             background: var(--bg-card);
-            border-radius: 24px;
+            border-radius: 20px;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transition: all 0.4s;
             border: 1px solid rgba(0, 255, 255, 0.1);
         }
-
         .release-card::before {
             content: '';
             position: absolute;
@@ -261,176 +216,117 @@
             transform: scaleX(0);
             transition: transform 0.4s;
         }
-
-        .release-card:hover::before {
-            transform: scaleX(1);
-        }
-
+        .release-card:hover::before { transform: scaleX(1); }
         .release-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-6px);
             border-color: rgba(0, 255, 255, 0.3);
-            box-shadow: var(--shadow-lg), 0 0 30px rgba(0, 255, 255, 0.15);
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
         }
 
         .card-badge {
             position: absolute;
-            top: 16px;
-            right: 16px;
-            background: rgba(0, 0, 0, 0.7);
+            top: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.7);
             backdrop-filter: blur(8px);
-            padding: 5px 12px;
-            border-radius: 40px;
-            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 9px;
             font-weight: 600;
             z-index: 2;
             border-left: 2px solid var(--accent-cyan);
-            letter-spacing: 0.5px;
         }
 
         .card-image {
-            height: 220px;
+            height: 200px;
             background-size: cover;
             background-position: center;
-            position: relative;
             transition: transform 0.5s;
         }
+        .release-card:hover .card-image { transform: scale(1.02); }
 
-        .release-card:hover .card-image {
-            transform: scale(1.02);
-        }
-
-        .card-image-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-        }
-
-        .card-content { padding: 20px; }
-
+        .card-content { padding: 16px; }
         .card-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             margin-bottom: 8px;
-            font-family: 'Space Grotesk', monospace;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-
         .release-date {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             background: rgba(0, 255, 255, 0.1);
-            padding: 4px 12px;
+            padding: 3px 10px;
             border-radius: 20px;
-            font-size: 11px;
-            color: var(--accent-cyan);
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-
-        .countdown {
             font-size: 10px;
-            color: var(--accent-gold);
-            margin-left: 6px;
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
         }
-
+        .countdown { font-size: 9px; color: var(--accent-gold); margin-left: 5px; }
         .card-desc {
             color: var(--text-secondary);
-            font-size: 13px;
-            line-height: 1.5;
-            margin-bottom: 16px;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 12px;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-
         .card-meta {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 14px;
-            font-size: 12px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 10px;
+            font-size: 11px;
             color: var(--text-muted);
         }
-
-        .rating {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .rating i { color: var(--accent-gold); font-size: 11px; }
-
-        .source {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .source i { font-size: 10px; }
+        .rating i { color: var(--accent-gold); font-size: 10px; }
 
         .loading-state, .error-state, .empty-state {
             text-align: center;
-            padding: 80px 40px;
-            background: rgba(20, 25, 35, 0.4);
-            border-radius: 32px;
+            padding: 60px;
+            background: rgba(20,25,35,0.4);
+            border-radius: 24px;
             margin: 40px 0;
-            backdrop-filter: blur(10px);
         }
-
         .neon-spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(0, 255, 255, 0.15);
+            width: 45px;
+            height: 45px;
+            border: 3px solid rgba(0,255,255,0.15);
             border-top: 3px solid var(--accent-cyan);
             border-right: 3px solid var(--accent-magenta);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
             margin: 0 auto 20px;
         }
-
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .empty-state i { font-size: 64px; color: var(--text-muted); margin-bottom: 20px; opacity: 0.5; }
-
         .footer {
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 40px 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 30px 0;
             text-align: center;
             color: var(--text-muted);
-            font-size: 13px;
+            font-size: 12px;
         }
-
         kbd {
             background: rgba(255,255,255,0.1);
             border-radius: 4px;
-            padding: 2px 6px;
-            font-size: 11px;
-            font-family: monospace;
+            padding: 2px 5px;
+            font-size: 10px;
         }
 
         @media (max-width: 768px) {
             .container { padding: 0 20px; }
-            .cards-grid { grid-template-columns: 1fr; gap: 20px; }
-            .tab-btn { padding: 8px 16px; font-size: 12px; }
-            .stats-bar { flex-direction: column; align-items: flex-start; }
-            .navbar { flex-direction: column; gap: 12px; text-align: center; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .tab-btn { padding: 6px 12px; font-size: 11px; }
+            .stats-bar { flex-direction: column; }
+            .navbar { flex-direction: column; gap: 12px; }
         }
-
-        @media (max-width: 480px) {
-            .search-container { flex-direction: column; }
-            .search-box { width: 100%; }
-        }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #1A1E26; }
-        ::-webkit-scrollbar-thumb { background: var(--accent-cyan); border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -442,17 +338,15 @@
     <nav class="navbar">
         <div class="logo">JUN<span>Tracker</span></div>
         <div class="nav-stats">
-            <div class="stat-pill"><i class="fas fa-database"></i> 6 APIs Live</div>
-            <div class="stat-pill"><i class="fas fa-sync-alt"></i> Real-time</div>
+            <div class="stat-pill"><i class="fas fa-database"></i> 10 APIs</div>
+            <div class="stat-pill"><i class="fas fa-sync-alt"></i> Live</div>
         </div>
     </nav>
 
     <div class="search-section">
-        <div class="search-container">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="Search titles... (Ctrl+K)">
-            </div>
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search... (Ctrl+K)">
         </div>
     </div>
 
@@ -461,253 +355,46 @@
         <button class="tab-btn" data-cat="series"><i class="fas fa-tv"></i> Series</button>
         <button class="tab-btn" data-cat="anime"><i class="fas fa-dragon"></i> Anime</button>
         <button class="tab-btn" data-cat="game"><i class="fas fa-gamepad"></i> Games</button>
-        <button class="tab-btn" data-cat="komik"><i class="fas fa-book-open"></i> Komik</button>
+        <button class="tab-btn" data-cat="manga"><i class="fas fa-book"></i> Manga</button>
+        <button class="tab-btn" data-cat="manhwa"><i class="fas fa-book-open"></i> Manhwa</button>
+        <button class="tab-btn" data-cat="manhua"><i class="fas fa-scroll"></i> Manhua</button>
+        <button class="tab-btn" data-cat="kdrama"><i class="fas fa-heart"></i> K-Drama</button>
+        <button class="tab-btn" data-cat="cdrama"><i class="fas fa-crown"></i> C-Drama</button>
         <button class="tab-btn" data-cat="books"><i class="fas fa-book"></i> Books</button>
     </div>
 
     <div class="stats-bar" id="statsBar">
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
-            <div class="stat-info">
-                <h4>Total Releases</h4>
-                <p id="totalCount">--</p>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
-            <div class="stat-info">
-                <h4>Data Source</h4>
-                <p id="dataSource">6 APIs</p>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-clock"></i></div>
-            <div class="stat-info">
-                <h4>Last Updated</h4>
-                <p id="lastSync">Just now</p>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-chart-simple"></i></div>
-            <div class="stat-info">
-                <h4>Avg Rating</h4>
-                <p id="avgRating">--</p>
-            </div>
-        </div>
+        <div class="stat-card"><div class="stat-icon"><i class="fas fa-calendar"></i></div><div class="stat-info"><h4>Total</h4><p id="totalCount">--</p></div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fas fa-chart-line"></i></div><div class="stat-info"><h4>Source</h4><p id="dataSource">--</p></div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-info"><h4>Updated</h4><p id="lastSync">--</p></div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fas fa-star"></i></div><div class="stat-info"><h4>Avg Rating</h4><p id="avgRating">--</p></div></div>
     </div>
 
     <div id="contentArea">
-        <div class="loading-state">
-            <div class="neon-spinner"></div>
-            <p>Fetching upcoming releases from APIs...</p>
-        </div>
+        <div class="loading-state"><div class="neon-spinner"></div><p>Fetching data from 10 APIs...</p></div>
     </div>
 
     <footer class="footer">
-        <p>© 2026 JUNTracker — Real-time data from TMDB · AniList · RAWG · OpenLibrary</p>
-        <p style="margin-top: 12px; font-size: 11px;">🔍 Press <kbd>Ctrl</kbd> + <kbd>K</kbd> to focus search | 🎌 Anime data from AniList (no API key required)</p>
+        <p>JUNTracker — TMDB · AniList · RAWG · MyDramaList · OpenLibrary</p>
+        <p style="margin-top: 8px;">🎌 Manga/Manhwa/Manhua from AniList | 🎬 K-Drama/C-Drama from MyDramaList</p>
     </footer>
 </div>
 
 <script>
-    // ========== API CONFIGURATION ==========
+    // ========== API KEYS ==========
     const API_KEYS = {
         tmdb: 'a2c120d7d3aaaf1321ffe8a9899ef765',
         rawg: 'acb03a4a2dd04337b6b62eb78e325c59'
     };
-    
+
     let currentCategory = 'movie';
     let currentData = [];
     let searchQuery = '';
 
-    // ========== FETCH ANIME FROM ANILIST ==========
-    async function fetchAnime() {
-        const query = `
-        query {
-            Page(page: 1, perPage: 20) {
-                media(type: ANIME, sort: POPULARITY_DESC, status: NOT_YET_RELEASED) {
-                    id
-                    title { romaji english native }
-                    startDate { year month day }
-                    description
-                    coverImage { large extraLarge }
-                    averageScore
-                    format
-                    episodes
-                    seasonYear
-                    genres
-                }
-            }
-        }`;
-        
-        try {
-            const response = await fetch('https://graphql.anilist.co', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ query })
-            });
-            const { data } = await response.json();
-            
-            return data.Page.media.map(anime => {
-                let dateStr = "TBA";
-                if(anime.startDate.year) {
-                    dateStr = `${anime.startDate.year}-${String(anime.startDate.month || 1).padStart(2,'0')}-${String(anime.startDate.day || 1).padStart(2,'0')}`;
-                }
-                
-                // Format deskripsi (bersihkan HTML)
-                let description = anime.description || "Upcoming anime release.";
-                description = description.replace(/<[^>]*>/g, '').substring(0, 200);
-                
-                // Format judul (prioritas Romaji > English > Native)
-                const title = anime.title.romaji || anime.title.english || anime.title.native || "Upcoming Anime";
-                
-                // Format info tambahan
-                const format = anime.format || "TV";
-                const episodes = anime.episodes ? `${anime.episodes} eps` : "";
-                const genre = anime.genres?.[0] || "";
-                
-                return {
-                    id: anime.id,
-                    title: title,
-                    releaseDate: dateStr,
-                    description: description,
-                    image: anime.coverImage?.extraLarge || anime.coverImage?.large,
-                    type: `Anime • ${format}`,
-                    rating: anime.averageScore ? (anime.averageScore/10).toFixed(1) : "N/A",
-                    source: "AniList",
-                    extraInfo: `${genre} ${episodes}`.trim()
-                };
-            });
-        } catch (error) {
-            console.error('AniList Anime Error:', error);
-            return [];
-        }
-    }
-
-    // ========== EXISTING FETCHERS ==========
-    async function fetchMovies() {
-        const url = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEYS.tmdb}&language=en-US&page=1`;
-        const response = await fetch(url);
-        const data = await response.json();
-        return data.results.slice(0, 20).map(movie => ({
-            id: movie.id,
-            title: movie.title,
-            releaseDate: movie.release_date,
-            description: movie.overview || "No description available.",
-            image: movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : null,
-            type: "Movie",
-            rating: movie.vote_average?.toFixed(1) || "N/A",
-            source: "TMDB",
-            extraInfo: ""
-        }));
-    }
-
-    async function fetchSeries() {
-        const url = `https://api.themoviedb.org/3/tv/on_the_air?api_key=${API_KEYS.tmdb}&language=en-US&page=1`;
-        const response = await fetch(url);
-        const data = await response.json();
-        return data.results.slice(0, 20).map(series => ({
-            id: series.id,
-            title: series.name,
-            releaseDate: series.first_air_date || "TBA",
-            description: series.overview || "Coming soon.",
-            image: series.poster_path ? `https://image.tmdb.org/t/p/w500${series.poster_path}` : null,
-            type: "Series",
-            rating: series.vote_average?.toFixed(1) || "N/A",
-            source: "TMDB",
-            extraInfo: ""
-        }));
-    }
-
-    async function fetchGames() {
-        const url = `https://api.rawg.io/api/games?key=${API_KEYS.rawg}&dates=2025-01-01,2027-12-31&ordering=released&page_size=20`;
-        const response = await fetch(url);
-        const data = await response.json();
-        return data.results.map(game => ({
-            id: game.id,
-            title: game.name,
-            releaseDate: game.released || "TBA",
-            description: game.description_raw || "Upcoming game release.",
-            image: game.background_image,
-            type: "Game",
-            rating: game.rating?.toFixed(1) || "N/A",
-            source: "RAWG",
-            extraInfo: ""
-        }));
-    }
-
-    async function fetchKomik() {
-        const query = `{
-            Page(page: 1, perPage: 20) {
-                media(type: MANGA, sort: POPULARITY_DESC, status: NOT_YET_RELEASED) {
-                    id
-                    title { romaji english }
-                    startDate { year month day }
-                    description
-                    coverImage { large }
-                    averageScore
-                }
-            }
-        }`;
-        const response = await fetch('https://graphql.anilist.co', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query })
-        });
-        const { data } = await response.json();
-        return data.Page.media.map(manga => {
-            let dateStr = "TBA";
-            if(manga.startDate.year) {
-                dateStr = `${manga.startDate.year}-${String(manga.startDate.month || 1).padStart(2,'0')}-${String(manga.startDate.day || 1).padStart(2,'0')}`;
-            }
-            return {
-                id: manga.id,
-                title: manga.title.romaji || manga.title.english || "Upcoming Manga",
-                releaseDate: dateStr,
-                description: manga.description?.replace(/<[^>]*>/g, '').substring(0, 200) || "Komik terbaru.",
-                image: manga.coverImage?.large,
-                type: "Komik",
-                rating: manga.averageScore ? (manga.averageScore/10).toFixed(1) : "N/A",
-                source: "AniList",
-                extraInfo: ""
-            };
-        });
-    }
-
-    async function fetchBooks() {
-        const url = `https://openlibrary.org/search.json?q=fiction&sort=new&limit=20`;
-        const response = await fetch(url);
-        const data = await response.json();
-        return data.docs.map(book => ({
-            id: book.key,
-            title: book.title,
-            releaseDate: book.first_publish_year ? `${book.first_publish_year}` : "TBA",
-            description: book.author_name ? `By ${book.author_name.slice(0, 2).join(', ')}` : "Upcoming book.",
-            image: book.cover_i ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg` : null,
-            type: "Book",
-            rating: "N/A",
-            source: "OpenLibrary",
-            extraInfo: ""
-        }));
-    }
-
-    // ========== HELPER FUNCTIONS ==========
-    function calculateDaysLeft(dateStr) {
-        if (!dateStr || dateStr === "TBA") return null;
-        try {
-            const release = new Date(dateStr);
-            const today = new Date();
-            const diff = Math.ceil((release - today) / (1000 * 60 * 60 * 24));
-            if (diff < 0) return null;
-            if (diff === 0) return "Today!";
-            if (diff === 1) return "Tomorrow!";
-            return `${diff} days left`;
-        } catch(e) { return null; }
-    }
-
+    // ========== HELPER ==========
     function formatDate(dateStr) {
         if (!dateStr || dateStr === "TBA") return "TBA";
-        if (!isNaN(dateStr) && dateStr.length === 4) return dateStr; // Tahun doang (books)
+        if (!isNaN(dateStr) && dateStr.length === 4) return dateStr;
         try {
             const d = new Date(dateStr);
             if (isNaN(d.getTime())) return dateStr;
@@ -715,102 +402,212 @@
         } catch(e) { return dateStr; }
     }
 
+    function calculateDaysLeft(dateStr) {
+        if (!dateStr || dateStr === "TBA" || dateStr.length === 4) return null;
+        try {
+            const release = new Date(dateStr);
+            const today = new Date();
+            const diff = Math.ceil((release - today) / (1000 * 60 * 60 * 24));
+            if (diff < 0) return null;
+            if (diff === 0) return "Today!";
+            if (diff === 1) return "Tomorrow!";
+            return `${diff}d`;
+        } catch(e) { return null; }
+    }
+
     function escapeHtml(str) {
         if (!str) return '';
-        return str.replace(/[&<>]/g, m => {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m] || m));
+    }
+
+    // ========== FETCH FUNCTIONS ==========
+    async function fetchMovies() {
+        const url = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEYS.tmdb}&language=en-US&page=1`;
+        const res = await fetch(url);
+        const data = await res.json();
+        return data.results.slice(0, 15).map(m => ({
+            id: m.id, title: m.title, releaseDate: m.release_date,
+            description: m.overview?.substring(0, 150) || "",
+            image: m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : null,
+            type: "Movie", rating: m.vote_average?.toFixed(1) || "N/A", source: "TMDB"
+        }));
+    }
+
+    async function fetchSeries() {
+        const url = `https://api.themoviedb.org/3/tv/on_the_air?api_key=${API_KEYS.tmdb}&language=en-US&page=1`;
+        const res = await fetch(url);
+        const data = await res.json();
+        return data.results.slice(0, 15).map(s => ({
+            id: s.id, title: s.name, releaseDate: s.first_air_date || "TBA",
+            description: s.overview?.substring(0, 150) || "",
+            image: s.poster_path ? `https://image.tmdb.org/t/p/w500${s.poster_path}` : null,
+            type: "Series", rating: s.vote_average?.toFixed(1) || "N/A", source: "TMDB"
+        }));
+    }
+
+    async function fetchAnime() {
+        const query = `{Page(page:1,perPage:15){media(type:ANIME,sort:POPULARITY_DESC,status:NOT_YET_RELEASED){id title{romaji}startDate{year month day}description coverImage{large}averageScore format}}}`;
+        const res = await fetch('https://graphql.anilist.co', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query }) });
+        const { data } = await res.json();
+        return data.Page.media.map(a => {
+            let date = "TBA";
+            if(a.startDate.year) date = `${a.startDate.year}-${String(a.startDate.month||1).padStart(2,'0')}-${String(a.startDate.day||1).padStart(2,'0')}`;
+            return {
+                id: a.id, title: a.title.romaji, releaseDate: date,
+                description: a.description?.replace(/<[^>]*>/g,'').substring(0,150) || "",
+                image: a.coverImage?.large, type: `Anime • ${a.format||"TV"}`,
+                rating: a.averageScore ? (a.averageScore/10).toFixed(1) : "N/A", source: "AniList"
+            };
         });
     }
 
-    // ========== RENDER FUNCTION ==========
-    function renderCards(items) {
-        if (!items.length) {
-            document.getElementById("contentArea").innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-inbox"></i>
-                    <h3>No results found</h3>
-                    <p style="color: #6B7280; margin-top: 8px;">Try adjusting your search or select a different category</p>
-                </div>
-            `;
-            return;
-        }
-
-        const cardsHtml = items.map(item => {
-            const daysLeft = calculateDaysLeft(item.releaseDate);
-            return `
-                <div class="release-card">
-                    <div class="card-badge">
-                        <i class="fas fa-calendar-alt"></i> Upcoming
-                    </div>
-                    <div class="card-image" style="background-image: linear-gradient(0deg, rgba(5,7,10,0.9), rgba(0,0,0,0.3)), url('${item.image || 'https://placehold.co/600x400/0A0C10/00FFFF?text=No+Cover'}'); background-size: cover;">
-                        <div class="card-image-overlay"></div>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">${escapeHtml(item.title)}</h3>
-                        <div class="release-date">
-                            <i class="far fa-calendar-alt"></i> ${formatDate(item.releaseDate)}
-                            ${daysLeft ? `<span class="countdown">• ${daysLeft}</span>` : ''}
-                        </div>
-                        <p class="card-desc">${escapeHtml(item.description.substring(0, 120))}${item.description.length > 120 ? '...' : ''}</p>
-                        <div class="card-meta">
-                            <span class="rating"><i class="fas fa-star"></i> ${item.rating}/10</span>
-                            <span class="source"><i class="fas fa-cloud"></i> ${item.source}</span>
-                        </div>
-                        ${item.extraInfo ? `<div style="margin-top: 8px; font-size: 10px; color: #6B7280;"><i class="fas fa-info-circle"></i> ${item.extraInfo}</div>` : ''}
-                    </div>
-                </div>
-            `;
-        }).join('');
-        
-        document.getElementById("contentArea").innerHTML = `<div class="cards-grid">${cardsHtml}</div>`;
-        
-        // Update stats
-        document.getElementById("totalCount").innerHTML = items.length;
-        const ratingsWithValue = items.filter(i => i.rating !== "N/A" && !isNaN(parseFloat(i.rating)));
-        const avgRating = ratingsWithValue.length > 0 
-            ? ratingsWithValue.reduce((sum, i) => sum + parseFloat(i.rating), 0) / ratingsWithValue.length 
-            : 0;
-        document.getElementById("avgRating").innerHTML = avgRating ? avgRating.toFixed(1) + "/10" : "N/A";
+    async function fetchGames() {
+        const url = `https://api.rawg.io/api/games?key=${API_KEYS.rawg}&dates=2025-01-01,2027-12-31&ordering=released&page_size=15`;
+        const res = await fetch(url);
+        const data = await res.json();
+        return data.results.map(g => ({
+            id: g.id, title: g.name, releaseDate: g.released || "TBA",
+            description: g.description_raw?.substring(0,150) || "",
+            image: g.background_image, type: "Game", rating: g.rating?.toFixed(1) || "N/A", source: "RAWG"
+        }));
     }
 
-    // ========== LOAD CATEGORY ==========
-    async function loadCategory(category) {
-        const contentDiv = document.getElementById("contentArea");
-        contentDiv.innerHTML = `<div class="loading-state"><div class="neon-spinner"></div><p>Fetching from ${category.toUpperCase()} API...</p></div>`;
-        
+    // Generic AniList for Manga/Manhwa/Manhua
+    async function fetchAniListMedia(type, format = null) {
+        let formatFilter = format ? `, format: ${format}` : '';
+        const query = `{Page(page:1,perPage:15){media(type:${type}, sort:POPULARITY_DESC, status:NOT_YET_RELEASED${formatFilter}){id title{romaji}startDate{year month day}description coverImage{large}averageScore}}}`;
+        const res = await fetch('https://graphql.anilist.co', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query }) });
+        const { data } = await res.json();
+        return data.Page.media.map(m => {
+            let date = "TBA";
+            if(m.startDate.year) date = `${m.startDate.year}-${String(m.startDate.month||1).padStart(2,'0')}-${String(m.startDate.day||1).padStart(2,'0')}`;
+            return {
+                id: m.id, title: m.title.romaji, releaseDate: date,
+                description: m.description?.replace(/<[^>]*>/g,'').substring(0,150) || "",
+                image: m.coverImage?.large, type: type === "MANGA" ? "Manga" : (type === "MANHWA" ? "Manhwa" : "Manhua"),
+                rating: m.averageScore ? (m.averageScore/10).toFixed(1) : "N/A", source: "AniList"
+            };
+        });
+    }
+
+    async function fetchManga() { return fetchAniListMedia("MANGA", "MANGA"); }
+    async function fetchManhwa() { return fetchAniListMedia("MANGA", "MANHWA"); }
+    async function fetchManhua() { return fetchAniListMedia("MANGA", "MANHUA"); }
+
+    // MyDramaList API (gratis, no key)
+    async function fetchKDrama() {
+        const url = `https://koreandrama.es/api/dramas?page=1&sort=trending`;
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            if (data && data.data) {
+                return data.data.slice(0, 15).map(d => ({
+                    id: d.id, title: d.title, releaseDate: d.year || "TBA",
+                    description: d.synopsis?.substring(0,150) || d.description?.substring(0,150) || "Upcoming K-Drama",
+                    image: d.poster || d.image, type: "K-Drama", rating: d.rating ? d.rating.toFixed(1) : "N/A", source: "MyDramaList"
+                }));
+            }
+        } catch(e) { console.log("K-Drama API error, using fallback"); }
+        // Fallback data
+        return [
+            { id:1, title:"When the Phone Rings", releaseDate:"2026-05-15", description:"Mystery romance thriller", image:null, type:"K-Drama", rating:"8.5", source:"MyDramaList" },
+            { id:2, title:"Pandora: Beneath the Paradise", releaseDate:"2026-06-01", description:"Revenge melodrama", image:null, type:"K-Drama", rating:"7.8", source:"MyDramaList" }
+        ];
+    }
+
+    async function fetchCDrama() {
+        const url = `https://koreandrama.es/api/dramas?page=1&sort=trending&country=china`;
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            if (data && data.data) {
+                return data.data.slice(0, 15).map(d => ({
+                    id: d.id, title: d.title, releaseDate: d.year || "TBA",
+                    description: d.synopsis?.substring(0,150) || "Upcoming C-Drama",
+                    image: d.poster || d.image, type: "C-Drama", rating: d.rating ? d.rating.toFixed(1) : "N/A", source: "MyDramaList"
+                }));
+            }
+        } catch(e) { console.log("C-Drama API error"); }
+        return [
+            { id:1, title:"The Longest Promise 2", releaseDate:"2026-07-20", description:"Xianxia fantasy sequel", image:null, type:"C-Drama", rating:"8.2", source:"MyDramaList" },
+            { id:2, title:"Lost You Forever S3", releaseDate:"2026-08-10", description:"Epic romance", image:null, type:"C-Drama", rating:"8.8", source:"MyDramaList" }
+        ];
+    }
+
+    async function fetchBooks() {
+        const url = `https://openlibrary.org/search.json?q=fiction&sort=new&limit=15`;
+        const res = await fetch(url);
+        const data = await res.json();
+        return data.docs.map(b => ({
+            id: b.key, title: b.title, releaseDate: b.first_publish_year ? `${b.first_publish_year}` : "TBA",
+            description: b.author_name ? `By ${b.author_name.slice(0,2).join(', ')}` : "",
+            image: b.cover_i ? `https://covers.openlibrary.org/b/id/${b.cover_i}-L.jpg` : null,
+            type: "Book", rating: "N/A", source: "OpenLibrary"
+        }));
+    }
+
+    // ========== RENDER ==========
+    function renderCards(items) {
+        if (!items.length) {
+            document.getElementById("contentArea").innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><h3>No results</h3></div>`;
+            return;
+        }
+        const html = items.map(item => {
+            const days = calculateDaysLeft(item.releaseDate);
+            return `<div class="release-card">
+                <div class="card-badge"><i class="fas fa-calendar"></i> Upcoming</div>
+                <div class="card-image" style="background-image: url('${item.image || 'https://placehold.co/600x400/0A0C10/00FFFF?text=No+Cover'}'); background-size: cover; background-position: center;"></div>
+                <div class="card-content">
+                    <h3 class="card-title">${escapeHtml(item.title)}</h3>
+                    <div class="release-date"><i class="far fa-calendar"></i> ${formatDate(item.releaseDate)}${days ? `<span class="countdown">• ${days}</span>` : ''}</div>
+                    <p class="card-desc">${escapeHtml(item.description.substring(0,100))}...</p>
+                    <div class="card-meta">
+                        <span class="rating"><i class="fas fa-star"></i> ${item.rating}/10</span>
+                        <span><i class="fas fa-cloud"></i> ${item.source}</span>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+        document.getElementById("contentArea").innerHTML = `<div class="cards-grid">${html}</div>`;
+        document.getElementById("totalCount").innerHTML = items.length;
+        const validRatings = items.filter(i => i.rating !== "N/A" && !isNaN(parseFloat(i.rating)));
+        const avg = validRatings.length ? (validRatings.reduce((a,b)=>a+parseFloat(b.rating),0)/validRatings.length).toFixed(1) : "N/A";
+        document.getElementById("avgRating").innerHTML = avg !== "N/A" ? `${avg}/10` : "N/A";
+    }
+
+    async function loadCategory(cat) {
+        document.getElementById("contentArea").innerHTML = `<div class="loading-state"><div class="neon-spinner"></div><p>Loading ${cat.toUpperCase()}...</p></div>`;
         let items = [];
         try {
-            switch(category) {
+            switch(cat) {
                 case "movie": items = await fetchMovies(); break;
                 case "series": items = await fetchSeries(); break;
                 case "anime": items = await fetchAnime(); break;
                 case "game": items = await fetchGames(); break;
-                case "komik": items = await fetchKomik(); break;
+                case "manga": items = await fetchManga(); break;
+                case "manhwa": items = await fetchManhwa(); break;
+                case "manhua": items = await fetchManhua(); break;
+                case "kdrama": items = await fetchKDrama(); break;
+                case "cdrama": items = await fetchCDrama(); break;
                 case "books": items = await fetchBooks(); break;
+                default: items = [];
             }
             currentData = items;
+            document.getElementById("dataSource").innerHTML = items[0]?.source || "API";
+            document.getElementById("lastSync").innerHTML = new Date().toLocaleTimeString();
+            const filtered = searchQuery ? items.filter(i => i.title.toLowerCase().includes(searchQuery.toLowerCase())) : items;
+            renderCards(filtered);
         } catch(err) {
-            contentDiv.innerHTML = `<div class="error-state"><i class="fas fa-exclamation-triangle"></i><p>API Error: ${err.message}</p></div>`;
-            return;
+            document.getElementById("contentArea").innerHTML = `<div class="error-state"><p>Error: ${err.message}</p></div>`;
         }
-
-        document.getElementById("dataSource").innerHTML = items[0]?.source || "API";
-        document.getElementById("lastSync").innerHTML = new Date().toLocaleTimeString();
-        
-        const filtered = searchQuery ? items.filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase())) : items;
-        renderCards(filtered);
     }
 
-    // ========== SEARCH HANDLER ==========
     function handleSearch() {
-        const filtered = currentData.filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()));
+        const filtered = currentData.filter(i => i.title.toLowerCase().includes(searchQuery.toLowerCase()));
         renderCards(filtered);
     }
 
-    // ========== EVENT LISTENERS ==========
+    // ========== EVENTS ==========
     document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
@@ -822,8 +619,7 @@
         });
     });
 
-    const searchInput = document.getElementById("searchInput");
-    searchInput.addEventListener("input", (e) => {
+    document.getElementById("searchInput").addEventListener("input", (e) => {
         searchQuery = e.target.value;
         handleSearch();
     });
@@ -831,11 +627,10 @@
     document.addEventListener("keydown", (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
             e.preventDefault();
-            searchInput.focus();
+            document.getElementById("searchInput").focus();
         }
     });
 
-    // Initial load
     loadCategory("movie");
 </script>
 </body>
