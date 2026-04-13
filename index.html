@@ -15,6 +15,7 @@
             box-sizing: border-box;
         }
 
+        /* ========== THEME VARIABLES ========== */
         :root {
             --bg-primary: #0A0C10;
             --bg-secondary: #12161F;
@@ -29,6 +30,20 @@
             --accent-pink: #FF69B4;
             --shadow-glow: 0 0 20px rgba(0, 255, 255, 0.15);
             --gradient-1: linear-gradient(135deg, #00FFFF, #FF00FF);
+            --modal-bg: rgba(0,0,0,0.95);
+            --card-bg: rgba(18, 22, 32, 0.95);
+        }
+
+        body.light-mode {
+            --bg-primary: #F5F7FB;
+            --bg-secondary: #FFFFFF;
+            --bg-card: rgba(255, 255, 255, 0.95);
+            --border-glow: rgba(0, 255, 255, 0.3);
+            --text-primary: #1A1A2E;
+            --text-secondary: #4A5568;
+            --text-muted: #718096;
+            --modal-bg: rgba(255,255,255,0.98);
+            --card-bg: #FFFFFF;
         }
 
         body {
@@ -37,8 +52,10 @@
             color: var(--text-primary);
             line-height: 1.5;
             overflow-x: hidden;
+            transition: background 0.3s, color 0.3s;
         }
 
+        /* Animated Background */
         .bg-orb {
             position: fixed;
             border-radius: 50%;
@@ -47,7 +64,9 @@
             pointer-events: none;
             z-index: 0;
             animation: float 20s infinite ease-in-out;
+            transition: opacity 0.3s;
         }
+        body.light-mode .bg-orb { opacity: 0.1; }
         .orb-1 { width: 500px; height: 500px; background: var(--accent-cyan); top: -200px; left: -200px; }
         .orb-2 { width: 600px; height: 600px; background: var(--accent-magenta); bottom: -300px; right: -200px; }
         .orb-3 { width: 400px; height: 400px; background: var(--accent-pink); top: 40%; left: 50%; opacity: 0.15; }
@@ -66,6 +85,7 @@
             z-index: 2;
         }
 
+        /* Navbar */
         .navbar {
             padding: 20px 0;
             display: flex;
@@ -75,7 +95,7 @@
             backdrop-filter: blur(12px);
             position: sticky;
             top: 0;
-            background: rgba(10, 12, 16, 0.85);
+            background: rgba(var(--bg-primary-rgb, 10,12,16), 0.85);
             z-index: 100;
             flex-wrap: wrap;
             gap: 16px;
@@ -91,45 +111,88 @@
             font-family: 'Space Grotesk', monospace;
         }
 
-        .logo span { color: white; background: none; }
+        .logo span { color: var(--text-primary); background: none; }
 
-        .nav-stats { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
-        .stat-pill {
-            background: rgba(0, 255, 255, 0.08);
-            padding: 6px 14px;
-            border-radius: 40px;
-            font-size: 12px;
-            border: 1px solid rgba(0, 255, 255, 0.2);
-        }
-
-        .search-section { margin: 32px 0 24px; }
-        .search-box {
+        .nav-controls {
             display: flex;
+            gap: 12px;
             align-items: center;
-            background: rgba(18, 22, 32, 0.8);
+            flex-wrap: wrap;
+        }
+
+        .theme-toggle, .filter-btn {
+            background: rgba(0, 255, 255, 0.1);
             border: 1px solid var(--border-glow);
-            border-radius: 60px;
-            padding: 8px 20px;
-            max-width: 400px;
+            border-radius: 40px;
+            padding: 8px 16px;
+            cursor: pointer;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.3s;
         }
-        .search-box:focus-within {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+
+        .theme-toggle:hover, .filter-btn:hover {
+            background: rgba(0, 255, 255, 0.2);
+            transform: translateY(-2px);
         }
-        .search-box i { color: var(--text-muted); margin-right: 12px; }
-        .search-box input {
-            background: none;
-            border: none;
-            color: white;
-            width: 100%;
+
+        /* Filter Bar */
+        .filter-bar {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 16px 20px;
+            margin: 20px 0 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid var(--border-glow);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-select {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-glow);
+            border-radius: 40px;
+            padding: 8px 16px;
+            color: var(--text-primary);
+            font-size: 13px;
+            cursor: pointer;
             outline: none;
+        }
+        body.light-mode .filter-select {
+            background: #f0f0f0;
+            color: #1a1a2e;
+        }
+
+        .sort-btn {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid var(--border-glow);
+            border-radius: 40px;
+            padding: 8px 16px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        .sort-btn.active {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 255, 0.2));
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
         }
 
         .category-tabs {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
             overflow-x: auto;
             padding-bottom: 8px;
         }
@@ -170,6 +233,10 @@
             flex-wrap: wrap;
             gap: 16px;
         }
+        body.light-mode .stats-bar {
+            background: rgba(255,255,255,0.8);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
 
         .stat-card { display: flex; align-items: center; gap: 12px; }
         .stat-icon {
@@ -186,6 +253,7 @@
         .stat-info h4 { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
         .stat-info p { font-size: 18px; font-weight: 700; }
 
+        /* Cards Grid */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -195,11 +263,12 @@
 
         .release-card {
             position: relative;
-            background: var(--bg-card);
+            background: var(--card-bg);
             border-radius: 20px;
             overflow: hidden;
             transition: all 0.4s;
-            border: 1px solid rgba(0, 255, 255, 0.1);
+            border: 1px solid var(--border-glow);
+            cursor: pointer;
         }
         .release-card::before {
             content: '';
@@ -248,9 +317,7 @@
             object-fit: contain;
             transition: transform 0.5s;
         }
-        .release-card:hover .card-image {
-            transform: scale(1.05);
-        }
+        .release-card:hover .card-image { transform: scale(1.05); }
 
         .card-content { padding: 16px; }
         .card-title {
@@ -261,7 +328,6 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            line-height: 1.3;
         }
         .release-date {
             display: inline-flex;
@@ -295,6 +361,114 @@
         }
         .rating i { color: var(--accent-gold); font-size: 10px; }
 
+        /* Modal Detail */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(8px);
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            max-width: 900px;
+            width: 90%;
+            max-height: 85vh;
+            background: var(--modal-bg);
+            border-radius: 32px;
+            overflow-y: auto;
+            position: relative;
+            border: 1px solid var(--accent-cyan);
+            box-shadow: 0 0 50px rgba(0,255,255,0.3);
+        }
+        .modal-close {
+            position: sticky;
+            top: 16px;
+            right: 16px;
+            float: right;
+            background: rgba(0,0,0,0.5);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            margin: 16px;
+            z-index: 10;
+        }
+        .modal-body {
+            padding: 0 32px 32px 32px;
+        }
+        .modal-header {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        .modal-poster {
+            width: 200px;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .modal-poster img {
+            width: 100%;
+            height: auto;
+        }
+        .modal-info {
+            flex: 1;
+        }
+        .modal-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+        .modal-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .modal-meta-item {
+            background: rgba(0, 255, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 12px;
+        }
+        .modal-desc {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .modal-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-glow);
+        }
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .detail-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        .detail-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
         .loading-state, .error-state, .empty-state {
             text-align: center;
             padding: 60px;
@@ -315,7 +489,7 @@
         @keyframes spin { to { transform: rotate(360deg); } }
 
         .footer {
-            border-top: 1px solid rgba(255,255,255,0.05);
+            border-top: 1px solid var(--border-glow);
             padding: 30px 0;
             text-align: center;
             color: var(--text-muted);
@@ -335,6 +509,8 @@
             .stats-bar { flex-direction: column; }
             .navbar { flex-direction: column; text-align: center; }
             .card-image-wrapper { height: 220px; }
+            .modal-header { flex-direction: column; align-items: center; text-align: center; }
+            .modal-poster { width: 150px; }
         }
     </style>
 </head>
@@ -346,16 +522,29 @@
 <div class="container">
     <nav class="navbar">
         <div class="logo">JUN<span>Tracker Pro</span></div>
-        <div class="nav-stats">
-            <div class="stat-pill"><i class="fas fa-database"></i> 7 APIs</div>
-            <div class="stat-pill"><i class="fas fa-sync-alt"></i> Live</div>
+        <div class="nav-controls">
+            <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i> Mode</button>
         </div>
     </nav>
 
-    <div class="search-section">
-        <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="Search all categories... (Ctrl+K)">
+    <!-- Filter & Sort Bar -->
+    <div class="filter-bar">
+        <div class="filter-group">
+            <select id="yearFilter" class="filter-select">
+                <option value="all">All Years</option>
+            </select>
+            <select id="monthFilter" class="filter-select">
+                <option value="all">All Months</option>
+                <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+                <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+                <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+                <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <button class="sort-btn" data-sort="latest"><i class="fas fa-clock"></i> Latest</button>
+            <button class="sort-btn" data-sort="rating"><i class="fas fa-star"></i> Top Rated</button>
+            <button class="sort-btn" data-sort="az"><i class="fas fa-sort-alpha-down"></i> A-Z</button>
         </div>
     </div>
 
@@ -387,6 +576,16 @@
     </footer>
 </div>
 
+<!-- Modal Detail -->
+<div id="detailModal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+        <div class="modal-body" id="modalBody">
+            <!-- Dynamic content -->
+        </div>
+    </div>
+</div>
+
 <script>
     // ========== API KEYS ==========
     const API_KEYS = {
@@ -396,7 +595,11 @@
 
     let currentCategory = 'movie';
     let currentData = [];
+    let filteredData = [];
     let searchQuery = '';
+    let currentSort = 'latest';
+    let currentYear = 'all';
+    let currentMonth = 'all';
 
     // ========== HELPER ==========
     function formatDate(dateStr) {
@@ -427,160 +630,161 @@
         return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m] || m));
     }
 
-    // ========== MOVIES & SERIES (TMDB) ==========
-    async function fetchMovies() {
-        const url = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEYS.tmdb}&language=en-US&page=1`;
-        const res = await fetch(url);
-        const data = await res.json();
-        return data.results.slice(0, 20).map(m => ({
-            id: m.id, title: m.title, releaseDate: m.release_date,
-            description: m.overview?.substring(0, 150) || "No description available",
-            image: m.poster_path ? `https://image.tmdb.org/t/p/original${m.poster_path}` : null,
-            type: "Movie", rating: m.vote_average?.toFixed(1) || "N/A", source: "TMDB"
-        }));
-    }
-
-    async function fetchSeries() {
-        const url = `https://api.themoviedb.org/3/tv/on_the_air?api_key=${API_KEYS.tmdb}&language=en-US&page=1`;
-        const res = await fetch(url);
-        const data = await res.json();
-        return data.results.slice(0, 20).map(s => ({
-            id: s.id, title: s.name, releaseDate: s.first_air_date || "TBA",
-            description: s.overview?.substring(0, 150) || "No description available",
-            image: s.poster_path ? `https://image.tmdb.org/t/p/original${s.poster_path}` : null,
-            type: "Series", rating: s.vote_average?.toFixed(1) || "N/A", source: "TMDB"
-        }));
-    }
-
-    // ========== ANIME (AniList) ==========
-    async function fetchAnime() {
+    function getYearFromDate(dateStr) {
+        if (!dateStr || dateStr === "TBA") return null;
         try {
-            const res = await fetch('https://graphql.anilist.co', { 
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify({
-                    query: `query { Page(page: 1 perPage: 20) { media(type: ANIME sort: POPULARITY_DESC status: NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { extraLarge } averageScore format } } }`
-                })
-            });
-            const data = await res.json();
-            if (data.errors) throw new Error(data.errors[0].message);
-            return data.data.Page.media.map(a => {
-                let date = "TBA";
-                if(a.startDate.year) date = `${a.startDate.year}-${String(a.startDate.month||1).padStart(2,'0')}-${String(a.startDate.day||1).padStart(2,'0')}`;
-                return {
-                    id: a.id, title: a.title.romaji, releaseDate: date,
-                    description: a.description?.replace(/<[^>]*>/g,'').substring(0,150) || "Upcoming anime release",
-                    image: a.coverImage?.extraLarge, type: `Anime • ${a.format||"TV"}`,
-                    rating: a.averageScore ? (a.averageScore/10).toFixed(1) : "N/A", source: "AniList"
-                };
-            });
-        } catch(e) { console.error("Anime error:", e); return []; }
+            const d = new Date(dateStr);
+            if (!isNaN(d.getTime())) return d.getFullYear();
+        } catch(e) {}
+        return null;
     }
 
-    // ========== GAMES (RAWG) ==========
-    async function fetchGames() {
-        const url = `https://api.rawg.io/api/games?key=${API_KEYS.rawg}&dates=2025-01-01,2028-12-31&ordering=released&page_size=20`;
-        const res = await fetch(url);
-        const data = await res.json();
-        return data.results.map(g => ({
-            id: g.id, title: g.name, releaseDate: g.released || "TBA",
-            description: g.description_raw?.substring(0,150) || "Upcoming game release",
-            image: g.background_image, type: "Game", rating: g.rating?.toFixed(1) || "N/A", source: "RAWG"
-        }));
-    }
-
-    // ========== KOMIK (Manga + Manhwa + Manhua) dari AniList ==========
-    async function fetchKomik() {
+    function getMonthFromDate(dateStr) {
+        if (!dateStr || dateStr === "TBA") return null;
         try {
-            const res = await fetch('https://graphql.anilist.co', { 
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify({
-                    query: `query { Page(page: 1 perPage: 30) { media(type: MANGA sort: POPULARITY_DESC status: NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { extraLarge } averageScore countryOfOrigin format } } }`
-                })
-            });
-            const data = await res.json();
-            if (data.errors) throw new Error(data.errors[0].message);
-            
-            return data.data.Page.media.map(m => {
-                let date = "TBA";
-                if(m.startDate.year) date = `${m.startDate.year}-${String(m.startDate.month||1).padStart(2,'0')}-${String(m.startDate.day||1).padStart(2,'0')}`;
-                
-                // Tentukan jenis komik berdasarkan countryOfOrigin
-                let komikType = "Komik";
-                if (m.countryOfOrigin === "JP") komikType = "🇯🇵 Manga";
-                else if (m.countryOfOrigin === "KR") komikType = "🇰🇷 Manhwa";
-                else if (m.countryOfOrigin === "CN") komikType = "🇨🇳 Manhua";
-                else komikType = `📚 ${m.format || "Komik"}`;
-                
-                return {
-                    id: m.id, 
-                    title: m.title.romaji, 
-                    releaseDate: date,
-                    description: m.description?.replace(/<[^>]*>/g,'').substring(0,150) || "Upcoming comic release",
-                    image: m.coverImage?.extraLarge, 
-                    type: komikType,
-                    rating: m.averageScore ? (m.averageScore/10).toFixed(1) : "N/A", 
-                    source: "AniList"
-                };
-            });
-        } catch(e) { 
-            console.error("Komik error:", e); 
-            return [];
+            const d = new Date(dateStr);
+            if (!isNaN(d.getTime())) return d.getMonth() + 1;
+        } catch(e) {}
+        return null;
+    }
+
+    // ========== FILTER & SORT ==========
+    function applyFiltersAndSort() {
+        let result = [...currentData];
+        
+        // Filter by year
+        if (currentYear !== 'all') {
+            result = result.filter(item => getYearFromDate(item.releaseDate) === parseInt(currentYear));
         }
+        
+        // Filter by month
+        if (currentMonth !== 'all') {
+            result = result.filter(item => getMonthFromDate(item.releaseDate) === parseInt(currentMonth));
+        }
+        
+        // Search filter
+        if (searchQuery) {
+            result = result.filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()));
+        }
+        
+        // Sort
+        if (currentSort === 'latest') {
+            result.sort((a, b) => {
+                const dateA = new Date(a.releaseDate);
+                const dateB = new Date(b.releaseDate);
+                if (isNaN(dateA) && isNaN(dateB)) return 0;
+                if (isNaN(dateA)) return 1;
+                if (isNaN(dateB)) return -1;
+                return dateB - dateA;
+            });
+        } else if (currentSort === 'rating') {
+            result.sort((a, b) => {
+                const ratingA = parseFloat(a.rating) || 0;
+                const ratingB = parseFloat(b.rating) || 0;
+                return ratingB - ratingA;
+            });
+        } else if (currentSort === 'az') {
+            result.sort((a, b) => a.title.localeCompare(b.title));
+        }
+        
+        filteredData = result;
+        renderCards(filteredData);
+        updateStats();
     }
 
-    // ========== K-DRAMA & C-DRAMA (TMDB) ==========
-    async function fetchKDrama() {
-        const url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEYS.tmdb}&with_original_language=ko&sort_by=first_air_date.desc&page=1`;
-        try {
-            const res = await fetch(url);
-            const data = await res.json();
-            return data.results.slice(0, 20).map(d => ({
-                id: d.id, title: d.name, releaseDate: d.first_air_date || "TBA",
-                description: d.overview?.substring(0,150) || "Upcoming Korean drama",
-                image: d.poster_path ? `https://image.tmdb.org/t/p/original${d.poster_path}` : null,
-                type: "K-Drama", rating: d.vote_average?.toFixed(1) || "N/A", source: "TMDB"
-            }));
-        } catch(e) { console.error("K-Drama error:", e); return []; }
+    function updateStats() {
+        document.getElementById("totalCount").innerHTML = filteredData.length;
+        const validRatings = filteredData.filter(i => i.rating !== "N/A" && !isNaN(parseFloat(i.rating)));
+        const avg = validRatings.length ? (validRatings.reduce((a,b)=>a+parseFloat(b.rating),0)/validRatings.length).toFixed(1) : "N/A";
+        document.getElementById("avgRating").innerHTML = avg !== "N/A" ? `${avg}/10` : "N/A";
     }
 
-    async function fetchCDrama() {
-        const url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEYS.tmdb}&with_original_language=zh&sort_by=first_air_date.desc&page=1`;
-        try {
-            const res = await fetch(url);
-            const data = await res.json();
-            return data.results.slice(0, 20).map(d => ({
-                id: d.id, title: d.name, releaseDate: d.first_air_date || "TBA",
-                description: d.overview?.substring(0,150) || "Upcoming Chinese drama",
-                image: d.poster_path ? `https://image.tmdb.org/t/p/original${d.poster_path}` : null,
-                type: "C-Drama", rating: d.vote_average?.toFixed(1) || "N/A", source: "TMDB"
-            }));
-        } catch(e) { console.error("C-Drama error:", e); return []; }
+    // Update year filter dropdown
+    function updateYearFilter(data) {
+        const years = new Set();
+        data.forEach(item => {
+            const year = getYearFromDate(item.releaseDate);
+            if (year) years.add(year);
+        });
+        const select = document.getElementById('yearFilter');
+        const currentValue = select.value;
+        select.innerHTML = '<option value="all">All Years</option>';
+        Array.from(years).sort((a,b)=>b-a).forEach(year => {
+            select.innerHTML += `<option value="${year}">${year}</option>`;
+        });
+        select.value = currentValue;
     }
 
-    // ========== BOOKS (OpenLibrary) ==========
-    async function fetchBooks() {
-        const url = `https://openlibrary.org/search.json?q=fiction&sort=new&limit=20`;
-        const res = await fetch(url);
-        const data = await res.json();
-        return data.docs.map(b => ({
-            id: b.key, title: b.title, releaseDate: b.first_publish_year ? `${b.first_publish_year}` : "TBA",
-            description: b.author_name ? `By ${b.author_name.slice(0,2).join(', ')}` : "Upcoming book release",
-            image: b.cover_i ? `https://covers.openlibrary.org/b/id/${b.cover_i}-L.jpg` : null,
-            type: "Book", rating: "N/A", source: "OpenLibrary"
-        }));
+    // ========== DETAIL MODAL ==========
+    function showDetail(item) {
+        const modal = document.getElementById('detailModal');
+        const modalBody = document.getElementById('modalBody');
+        
+        const daysLeft = calculateDaysLeft(item.releaseDate);
+        const releaseDateFormatted = formatDate(item.releaseDate);
+        
+        modalBody.innerHTML = `
+            <div class="modal-header">
+                <div class="modal-poster">
+                    <img src="${item.image || 'https://placehold.co/400x600/0A0C10/00FFFF?text=No+Cover'}" alt="${escapeHtml(item.title)}" onerror="this.src='https://placehold.co/400x600/0A0C10/00FFFF?text=No+Image'">
+                </div>
+                <div class="modal-info">
+                    <h2 class="modal-title">${escapeHtml(item.title)}</h2>
+                    <div class="modal-meta">
+                        <span class="modal-meta-item"><i class="fas fa-tag"></i> ${item.type}</span>
+                        <span class="modal-meta-item"><i class="fas fa-calendar"></i> ${releaseDateFormatted} ${daysLeft ? `• ${daysLeft}` : ''}</span>
+                        <span class="modal-meta-item"><i class="fas fa-star" style="color:#FFD700"></i> ${item.rating}/10</span>
+                        <span class="modal-meta-item"><i class="fas fa-cloud"></i> ${item.source}</span>
+                    </div>
+                    <div class="modal-desc">
+                        ${escapeHtml(item.description) || 'No description available.'}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-detail-grid">
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fas fa-hashtag"></i> ID</span>
+                    <span class="detail-value">${item.id}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fas fa-calendar-week"></i> Release Status</span>
+                    <span class="detail-value">Upcoming</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fas fa-chart-line"></i> Popularity</span>
+                    <span class="detail-value">High Demand</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fas fa-globe"></i> Data Source</span>
+                    <span class="detail-value">${item.source}</span>
+                </div>
+            </div>
+        `;
+        
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
     }
+
+    function closeModal() {
+        const modal = document.getElementById('detailModal');
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Close modal on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+    });
 
     // ========== RENDER ==========
     function renderCards(items) {
         if (!items.length) {
-            document.getElementById("contentArea").innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><h3>No results found</h3><p>Try another category</p></div>`;
+            document.getElementById("contentArea").innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><h3>No results found</h3><p>Try changing filters or category</p></div>`;
             return;
         }
         const html = items.map(item => {
             const days = calculateDaysLeft(item.releaseDate);
-            return `<div class="release-card">
+            return `<div class="release-card" onclick='showDetail(${JSON.stringify(item).replace(/'/g, "&#39;")})'>
                 <div class="card-badge"><i class="fas fa-calendar"></i> Upcoming</div>
                 <div class="card-image-wrapper">
                     <img class="card-image" src="${item.image || 'https://placehold.co/600x800/0A0C10/00FFFF?text=No+Cover'}" alt="${escapeHtml(item.title)}" onerror="this.src='https://placehold.co/600x800/0A0C10/00FFFF?text=No+Image'">
@@ -598,10 +802,136 @@
             </div>`;
         }).join('');
         document.getElementById("contentArea").innerHTML = `<div class="cards-grid">${html}</div>`;
-        document.getElementById("totalCount").innerHTML = items.length;
-        const validRatings = items.filter(i => i.rating !== "N/A" && !isNaN(parseFloat(i.rating)));
-        const avg = validRatings.length ? (validRatings.reduce((a,b)=>a+parseFloat(b.rating),0)/validRatings.length).toFixed(1) : "N/A";
-        document.getElementById("avgRating").innerHTML = avg !== "N/A" ? `${avg}/10` : "N/A";
+        updateStats();
+    }
+
+    // ========== FETCH FUNCTIONS (SAMA SEPERTI SEBELUMNYA) ==========
+    async function fetchMovies() {
+        const url = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEYS.tmdb}&language=en-US&page=1`;
+        const res = await fetch(url);
+        const data = await res.json();
+        return data.results.slice(0, 30).map(m => ({
+            id: m.id, title: m.title, releaseDate: m.release_date,
+            description: m.overview?.substring(0, 300) || "No description available",
+            image: m.poster_path ? `https://image.tmdb.org/t/p/original${m.poster_path}` : null,
+            type: "Movie", rating: m.vote_average?.toFixed(1) || "N/A", source: "TMDB"
+        }));
+    }
+
+    async function fetchSeries() {
+        const url = `https://api.themoviedb.org/3/tv/on_the_air?api_key=${API_KEYS.tmdb}&language=en-US&page=1`;
+        const res = await fetch(url);
+        const data = await res.json();
+        return data.results.slice(0, 30).map(s => ({
+            id: s.id, title: s.name, releaseDate: s.first_air_date || "TBA",
+            description: s.overview?.substring(0, 300) || "No description available",
+            image: s.poster_path ? `https://image.tmdb.org/t/p/original${s.poster_path}` : null,
+            type: "Series", rating: s.vote_average?.toFixed(1) || "N/A", source: "TMDB"
+        }));
+    }
+
+    async function fetchAnime() {
+        try {
+            const res = await fetch('https://graphql.anilist.co', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({
+                    query: `query { Page(page: 1 perPage: 30) { media(type: ANIME sort: POPULARITY_DESC status: NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { extraLarge } averageScore format } } }`
+                })
+            });
+            const data = await res.json();
+            if (data.errors) throw new Error(data.errors[0].message);
+            return data.data.Page.media.map(a => {
+                let date = "TBA";
+                if(a.startDate.year) date = `${a.startDate.year}-${String(a.startDate.month||1).padStart(2,'0')}-${String(a.startDate.day||1).padStart(2,'0')}`;
+                return {
+                    id: a.id, title: a.title.romaji, releaseDate: date,
+                    description: a.description?.replace(/<[^>]*>/g,'').substring(0,300) || "Upcoming anime release",
+                    image: a.coverImage?.extraLarge, type: `Anime • ${a.format||"TV"}`,
+                    rating: a.averageScore ? (a.averageScore/10).toFixed(1) : "N/A", source: "AniList"
+                };
+            });
+        } catch(e) { console.error("Anime error:", e); return []; }
+    }
+
+    async function fetchGames() {
+        const url = `https://api.rawg.io/api/games?key=${API_KEYS.rawg}&dates=2025-01-01,2028-12-31&ordering=released&page_size=30`;
+        const res = await fetch(url);
+        const data = await res.json();
+        return data.results.map(g => ({
+            id: g.id, title: g.name, releaseDate: g.released || "TBA",
+            description: g.description_raw?.substring(0,300) || "Upcoming game release",
+            image: g.background_image, type: "Game", rating: g.rating?.toFixed(1) || "N/A", source: "RAWG"
+        }));
+    }
+
+    async function fetchKomik() {
+        try {
+            const res = await fetch('https://graphql.anilist.co', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({
+                    query: `query { Page(page: 1 perPage: 30) { media(type: MANGA sort: POPULARITY_DESC status: NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { extraLarge } averageScore countryOfOrigin format } } }`
+                })
+            });
+            const data = await res.json();
+            if (data.errors) throw new Error(data.errors[0].message);
+            return data.data.Page.media.map(m => {
+                let date = "TBA";
+                if(m.startDate.year) date = `${m.startDate.year}-${String(m.startDate.month||1).padStart(2,'0')}-${String(m.startDate.day||1).padStart(2,'0')}`;
+                let komikType = "Komik";
+                if (m.countryOfOrigin === "JP") komikType = "🇯🇵 Manga";
+                else if (m.countryOfOrigin === "KR") komikType = "🇰🇷 Manhwa";
+                else if (m.countryOfOrigin === "CN") komikType = "🇨🇳 Manhua";
+                else komikType = `📚 ${m.format || "Komik"}`;
+                return {
+                    id: m.id, title: m.title.romaji, releaseDate: date,
+                    description: m.description?.replace(/<[^>]*>/g,'').substring(0,300) || "Upcoming comic release",
+                    image: m.coverImage?.extraLarge, type: komikType,
+                    rating: m.averageScore ? (m.averageScore/10).toFixed(1) : "N/A", source: "AniList"
+                };
+            });
+        } catch(e) { console.error("Komik error:", e); return []; }
+    }
+
+    async function fetchKDrama() {
+        const url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEYS.tmdb}&with_original_language=ko&sort_by=first_air_date.desc&page=1`;
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            return data.results.slice(0, 30).map(d => ({
+                id: d.id, title: d.name, releaseDate: d.first_air_date || "TBA",
+                description: d.overview?.substring(0,300) || "Upcoming Korean drama",
+                image: d.poster_path ? `https://image.tmdb.org/t/p/original${d.poster_path}` : null,
+                type: "K-Drama", rating: d.vote_average?.toFixed(1) || "N/A", source: "TMDB"
+            }));
+        } catch(e) { console.error("K-Drama error:", e); return []; }
+    }
+
+    async function fetchCDrama() {
+        const url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEYS.tmdb}&with_original_language=zh&sort_by=first_air_date.desc&page=1`;
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            return data.results.slice(0, 30).map(d => ({
+                id: d.id, title: d.name, releaseDate: d.first_air_date || "TBA",
+                description: d.overview?.substring(0,300) || "Upcoming Chinese drama",
+                image: d.poster_path ? `https://image.tmdb.org/t/p/original${d.poster_path}` : null,
+                type: "C-Drama", rating: d.vote_average?.toFixed(1) || "N/A", source: "TMDB"
+            }));
+        } catch(e) { console.error("C-Drama error:", e); return []; }
+    }
+
+    async function fetchBooks() {
+        const url = `https://openlibrary.org/search.json?q=fiction&sort=new&limit=30`;
+        const res = await fetch(url);
+        const data = await res.json();
+        return data.docs.map(b => ({
+            id: b.key, title: b.title, releaseDate: b.first_publish_year ? `${b.first_publish_year}` : "TBA",
+            description: b.author_name ? `By ${b.author_name.slice(0,2).join(', ')}` : "Upcoming book release",
+            image: b.cover_i ? `https://covers.openlibrary.org/b/id/${b.cover_i}-L.jpg` : null,
+            type: "Book", rating: "N/A", source: "OpenLibrary"
+        }));
     }
 
     async function loadCategory(cat) {
@@ -622,20 +952,16 @@
             currentData = items;
             document.getElementById("dataSource").innerHTML = items[0]?.source || "API";
             document.getElementById("lastSync").innerHTML = new Date().toLocaleTimeString();
-            const filtered = searchQuery ? items.filter(i => i.title.toLowerCase().includes(searchQuery.toLowerCase())) : items;
-            renderCards(filtered);
+            
+            updateYearFilter(currentData);
+            applyFiltersAndSort();
         } catch(err) {
             console.error("Load error:", err);
             document.getElementById("contentArea").innerHTML = `<div class="error-state"><p>Error loading ${cat}. Please try again.</p></div>`;
         }
     }
 
-    function handleSearch() {
-        const filtered = currentData.filter(i => i.title.toLowerCase().includes(searchQuery.toLowerCase()));
-        renderCards(filtered);
-    }
-
-    // ========== EVENTS ==========
+    // ========== EVENT LISTENERS ==========
     document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
@@ -643,23 +969,75 @@
             currentCategory = btn.dataset.cat;
             searchQuery = '';
             document.getElementById("searchInput").value = '';
+            currentYear = 'all';
+            currentMonth = 'all';
+            document.getElementById('yearFilter').value = 'all';
+            document.getElementById('monthFilter').value = 'all';
             loadCategory(currentCategory);
         });
     });
 
-    document.getElementById("searchInput").addEventListener("input", (e) => {
-        searchQuery = e.target.value;
-        handleSearch();
+    // Filter listeners
+    document.getElementById('yearFilter').addEventListener('change', (e) => {
+        currentYear = e.target.value;
+        applyFiltersAndSort();
+    });
+    document.getElementById('monthFilter').addEventListener('change', (e) => {
+        currentMonth = e.target.value;
+        applyFiltersAndSort();
     });
 
-    document.addEventListener("keydown", (e) => {
+    // Sort buttons
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentSort = btn.dataset.sort;
+            applyFiltersAndSort();
+        });
+    });
+
+    // Search input
+    const searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.placeholder = 'Search... (Ctrl+K)';
+    searchInput.id = 'searchInput';
+    searchInput.style.cssText = 'background:none;border:none;color:var(--text-primary);width:100%;outline:none';
+    const searchBox = document.querySelector('.search-box');
+    if (searchBox) {
+        searchBox.innerHTML = '<i class="fas fa-search"></i>';
+        searchBox.appendChild(searchInput);
+    }
+    
+    searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        applyFiltersAndSort();
+    });
+
+    document.addEventListener('keydown', (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
             e.preventDefault();
-            document.getElementById("searchInput").focus();
+            searchInput.focus();
         }
     });
 
-    loadCategory("movie");
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        themeToggle.innerHTML = isLight ? '<i class="fas fa-sun"></i> Light' : '<i class="fas fa-moon"></i> Mode';
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    });
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i> Light';
+    }
+
+    // Initial load
+    loadCategory('movie');
 </script>
 </body>
 </html>
