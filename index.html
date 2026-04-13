@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <meta name="description" content="JUNTracker Pro - Ultimate release tracker for Movies, Series, Anime, Games, Manga, Manhwa, Manhua, K-Drama, C-Drama & Books">
+    <meta name="description" content="JUNTracker Pro - Ultimate release tracker for Movies, Series, Anime, Games, Comics, K-Drama, C-Drama & Books">
     <meta name="theme-color" content="#0A0C10">
     <title>JUNTracker Pro | Complete Release Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -27,7 +27,6 @@
             --accent-magenta: #FF00FF;
             --accent-gold: #FFD700;
             --accent-pink: #FF69B4;
-            --accent-orange: #FF6B35;
             --shadow-glow: 0 0 20px rgba(0, 255, 255, 0.15);
             --gradient-1: linear-gradient(135deg, #00FFFF, #FF00FF);
         }
@@ -348,7 +347,7 @@
     <nav class="navbar">
         <div class="logo">JUN<span>Tracker Pro</span></div>
         <div class="nav-stats">
-            <div class="stat-pill"><i class="fas fa-database"></i> 10 APIs</div>
+            <div class="stat-pill"><i class="fas fa-database"></i> 7 APIs</div>
             <div class="stat-pill"><i class="fas fa-sync-alt"></i> Live</div>
         </div>
     </nav>
@@ -365,9 +364,7 @@
         <button class="tab-btn" data-cat="series"><i class="fas fa-tv"></i> Series</button>
         <button class="tab-btn" data-cat="anime"><i class="fas fa-dragon"></i> Anime</button>
         <button class="tab-btn" data-cat="game"><i class="fas fa-gamepad"></i> Games</button>
-        <button class="tab-btn" data-cat="manga"><i class="fas fa-book"></i> Manga</button>
-        <button class="tab-btn" data-cat="manhwa"><i class="fas fa-book-open"></i> Manhwa</button>
-        <button class="tab-btn" data-cat="manhua"><i class="fas fa-scroll"></i> Manhua</button>
+        <button class="tab-btn" data-cat="komik"><i class="fas fa-book-open"></i> Komik</button>
         <button class="tab-btn" data-cat="kdrama"><i class="fas fa-heart"></i> K-Drama</button>
         <button class="tab-btn" data-cat="cdrama"><i class="fas fa-crown"></i> C-Drama</button>
         <button class="tab-btn" data-cat="books"><i class="fas fa-book"></i> Books</button>
@@ -381,12 +378,12 @@
     </div>
 
     <div id="contentArea">
-        <div class="loading-state"><div class="neon-spinner"></div><p>Fetching data from 10+ APIs...</p></div>
+        <div class="loading-state"><div class="neon-spinner"></div><p>Fetching data from APIs...</p></div>
     </div>
 
     <footer class="footer">
-        <p>JUNTracker Pro — TMDB · AniList · RAWG · MangaDex · OpenLibrary</p>
-        <p style="margin-top: 8px;">🎌 Manhwa & Manhua from MangaDex API | 🎬 K-Drama/C-Drama from TMDB</p>
+        <p>JUNTracker Pro — TMDB · AniList · RAWG · OpenLibrary</p>
+        <p style="margin-top: 8px;">📚 Komik (Manga + Manhwa + Manhua) from AniList | 🎬 K-Drama/C-Drama from TMDB</p>
     </footer>
 </div>
 
@@ -394,8 +391,7 @@
     // ========== API KEYS ==========
     const API_KEYS = {
         tmdb: 'a2c120d7d3aaaf1321ffe8a9899ef765',
-        rawg: 'acb03a4a2dd04337b6b62eb78e325c59',
-        mangadex: 'personal-client-29897a59-b1cf-45d4-bcaf-5b25a5bcb713-ba9550b2'
+        rawg: 'acb03a4a2dd04337b6b62eb78e325c59'
     };
 
     let currentCategory = 'movie';
@@ -493,145 +489,43 @@
         }));
     }
 
-    // ========== MANGA (AniList - Japan) ==========
-    async function fetchManga() {
+    // ========== KOMIK (Manga + Manhwa + Manhua) dari AniList ==========
+    async function fetchKomik() {
         try {
             const res = await fetch('https://graphql.anilist.co', { 
                 method: 'POST', 
                 headers: { 'Content-Type': 'application/json' }, 
                 body: JSON.stringify({
-                    query: `query { Page(page: 1 perPage: 20) { media(type: MANGA countryOfOrigin: JP sort: POPULARITY_DESC status: NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { extraLarge } averageScore } } }`
+                    query: `query { Page(page: 1 perPage: 30) { media(type: MANGA sort: POPULARITY_DESC status: NOT_YET_RELEASED) { id title { romaji } startDate { year month day } description coverImage { extraLarge } averageScore countryOfOrigin format } } }`
                 })
             });
             const data = await res.json();
             if (data.errors) throw new Error(data.errors[0].message);
+            
             return data.data.Page.media.map(m => {
                 let date = "TBA";
                 if(m.startDate.year) date = `${m.startDate.year}-${String(m.startDate.month||1).padStart(2,'0')}-${String(m.startDate.day||1).padStart(2,'0')}`;
-                return {
-                    id: m.id, title: m.title.romaji, releaseDate: date,
-                    description: m.description?.replace(/<[^>]*>/g,'').substring(0,150) || "Upcoming manga release",
-                    image: m.coverImage?.extraLarge, type: "Manga",
-                    rating: m.averageScore ? (m.averageScore/10).toFixed(1) : "N/A", source: "AniList"
-                };
-            });
-        } catch(e) { console.error("Manga error:", e); return []; }
-    }
-
-    // ========== MANHWA (MangaDex - Korea) ==========
-    async function fetchManhwa() {
-        const url = `https://api.mangadex.org/manga?limit=20&includes[]=cover_art&order[followedCount]=desc&contentRating[]=safe&contentRating[]=suggestive&originalLanguage[]=ko&availableTranslatedLanguage[]=en`;
-        
-        try {
-            const res = await fetch(url);
-            const data = await res.json();
-            
-            if (!data.data) return [];
-            
-            return data.data.slice(0, 15).map(manga => {
-                let coverFile = null;
-                const coverRelation = manga.relationships?.find(r => r.type === 'cover_art');
-                if (coverRelation) {
-                    coverFile = coverRelation.attributes?.fileName;
-                }
                 
-                const coverUrl = coverFile ? `https://uploads.mangadex.org/covers/${manga.id}/${coverFile}` : null;
-                
-                let releaseYear = "TBA";
-                if (manga.attributes?.year) {
-                    releaseYear = manga.attributes.year;
-                } else if (manga.attributes?.createdAt) {
-                    releaseYear = new Date(manga.attributes.createdAt).getFullYear();
-                }
-                
-                let title = "Unknown Title";
-                if (manga.attributes?.title) {
-                    title = manga.attributes.title.en || 
-                            manga.attributes.title.jp || 
-                            Object.values(manga.attributes.title)[0] || 
-                            "Unknown Title";
-                }
-                
-                let description = "Upcoming manhwa release";
-                if (manga.attributes?.description) {
-                    description = manga.attributes.description.en || 
-                                 Object.values(manga.attributes.description)[0] || 
-                                 description;
-                    description = description.replace(/<[^>]*>/g, '').substring(0, 150);
-                }
+                // Tentukan jenis komik berdasarkan countryOfOrigin
+                let komikType = "Komik";
+                if (m.countryOfOrigin === "JP") komikType = "🇯🇵 Manga";
+                else if (m.countryOfOrigin === "KR") komikType = "🇰🇷 Manhwa";
+                else if (m.countryOfOrigin === "CN") komikType = "🇨🇳 Manhua";
+                else komikType = `📚 ${m.format || "Komik"}`;
                 
                 return {
-                    id: manga.id,
-                    title: title,
-                    releaseDate: releaseYear.toString(),
-                    description: description,
-                    image: coverUrl,
-                    type: "Manhwa",
-                    rating: manga.attributes?.rating?.bayesian?.toFixed(1) || "N/A",
-                    source: "MangaDex"
+                    id: m.id, 
+                    title: m.title.romaji, 
+                    releaseDate: date,
+                    description: m.description?.replace(/<[^>]*>/g,'').substring(0,150) || "Upcoming comic release",
+                    image: m.coverImage?.extraLarge, 
+                    type: komikType,
+                    rating: m.averageScore ? (m.averageScore/10).toFixed(1) : "N/A", 
+                    source: "AniList"
                 };
             });
-        } catch(e) {
-            console.error("Manhwa API error:", e);
-            return [];
-        }
-    }
-
-    // ========== MANHUA (MangaDex - China) ==========
-    async function fetchManhua() {
-        const url = `https://api.mangadex.org/manga?limit=20&includes[]=cover_art&order[followedCount]=desc&contentRating[]=safe&contentRating[]=suggestive&originalLanguage[]=zh&availableTranslatedLanguage[]=en`;
-        
-        try {
-            const res = await fetch(url);
-            const data = await res.json();
-            
-            if (!data.data) return [];
-            
-            return data.data.slice(0, 15).map(manga => {
-                let coverFile = null;
-                const coverRelation = manga.relationships?.find(r => r.type === 'cover_art');
-                if (coverRelation) {
-                    coverFile = coverRelation.attributes?.fileName;
-                }
-                
-                const coverUrl = coverFile ? `https://uploads.mangadex.org/covers/${manga.id}/${coverFile}` : null;
-                
-                let releaseYear = "TBA";
-                if (manga.attributes?.year) {
-                    releaseYear = manga.attributes.year;
-                } else if (manga.attributes?.createdAt) {
-                    releaseYear = new Date(manga.attributes.createdAt).getFullYear();
-                }
-                
-                let title = "Unknown Title";
-                if (manga.attributes?.title) {
-                    title = manga.attributes.title.en || 
-                            manga.attributes.title.zh || 
-                            Object.values(manga.attributes.title)[0] || 
-                            "Unknown Title";
-                }
-                
-                let description = "Upcoming manhua release";
-                if (manga.attributes?.description) {
-                    description = manga.attributes.description.en || 
-                                 Object.values(manga.attributes.description)[0] || 
-                                 description;
-                    description = description.replace(/<[^>]*>/g, '').substring(0, 150);
-                }
-                
-                return {
-                    id: manga.id,
-                    title: title,
-                    releaseDate: releaseYear.toString(),
-                    description: description,
-                    image: coverUrl,
-                    type: "Manhua",
-                    rating: manga.attributes?.rating?.bayesian?.toFixed(1) || "N/A",
-                    source: "MangaDex"
-                };
-            });
-        } catch(e) {
-            console.error("Manhua API error:", e);
+        } catch(e) { 
+            console.error("Komik error:", e); 
             return [];
         }
     }
@@ -698,6 +592,7 @@
                     <div class="card-meta">
                         <span class="rating"><i class="fas fa-star"></i> ${item.rating}/10</span>
                         <span><i class="fas fa-cloud"></i> ${item.source}</span>
+                        <span><i class="fas fa-tag"></i> ${item.type}</span>
                     </div>
                 </div>
             </div>`;
@@ -718,9 +613,7 @@
                 case "series": items = await fetchSeries(); break;
                 case "anime": items = await fetchAnime(); break;
                 case "game": items = await fetchGames(); break;
-                case "manga": items = await fetchManga(); break;
-                case "manhwa": items = await fetchManhwa(); break;
-                case "manhua": items = await fetchManhua(); break;
+                case "komik": items = await fetchKomik(); break;
                 case "kdrama": items = await fetchKDrama(); break;
                 case "cdrama": items = await fetchCDrama(); break;
                 case "books": items = await fetchBooks(); break;
